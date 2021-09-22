@@ -8,30 +8,40 @@ import game.tetrominos.Tetromino;
  *
  */
 public class Grid {
+	
 	//Atributos de clase
 	protected static final int rows= 21;
 	protected static final int columns = 10;
 	
 	//Atributos de instancia
-//	protected [rows][columns] Block matrixBlocks;
+//	protected [rows][columns] Block matrixBlocks; TODO
 	protected Tetromino nextTetromino; 
 	protected Tetromino fallingTetromino;
-//	protected Game game;
+//	protected Game game; TODO
 	
 	public Grid() {
 		//matrixBlocks = new Blocks[rows][columns]; TODO
 	}
 	
+	/**
+	 * Chequea que si la linea esta completa
+	 * @param entero numero de fila a chequear
+	 * @return boolean true si esta llena, false sino.
+	 */
 	public boolean checkLine(int row) {
 		boolean full=false;
 		return full;
 	}
 	
-	public void deleteLines() {}
+	public int deleteLines() {
+		int toReturn=-1;
+		return toReturn;
+	}
 	
-	protected void fall() {}
 	
 	public void addTetromino() {}
+	
+	protected void fall() {}
 	
 	protected void setNextTetromino(Tetromino t) {} 
 	
