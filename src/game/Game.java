@@ -19,7 +19,7 @@ public class Game {
 	protected int timeSinceRun = 0;
 	
 	public Game(Grid grid) {
-		this.grid = grid;
+		grid = new Grid(this);
 		this.speed = 0;
 		this.lost = false;
 	}
