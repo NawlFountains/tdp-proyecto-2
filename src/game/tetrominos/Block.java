@@ -1,5 +1,7 @@
 package game.tetrominos;
 
+import game.Grid;
+
 /**
  * Modela un bloque del juego.
  */
@@ -8,6 +10,7 @@ public class Block {
 	protected int x;
 	protected int y;
 	protected Color color;
+	protected Grid grid;
 	
 	/**
 	 * Crea un nuevo bloque.
@@ -19,9 +22,32 @@ public class Block {
 	}
 	
 	/**
+	 * Setea las coordenadas de este bloque en su grilla. Si este bloque no tiene una grilla, no se hace nada.
+	 * @param x La nueva coordenada x para este bloque.
+	 * @param y La nueva coordenada y para este bloque.
+	 */
+	public void setCoordinates(int x, int y) {
+		if(grid != null) {
+			//TODO remover de la grilla
+			this.x = x;
+			this.y = y;
+			//TODO añadir a la grilla
+		}
+	}
+	
+	/**
+	 * Setea la grilla en la que se encuentra este bloque.
+	 * @param grid Una grilla.
+	 */
+	public void setGrid(Grid grid) {
+		this.grid = grid;
+	}
+	
+	/**
 	 * Setea la coordenada x de este bloque.
 	 * @param x La nueva cooredenada x para este bloque.
 	 */
+	@Deprecated
 	public void setX(int x) {
 		this.x = x;
 	}
@@ -30,6 +56,7 @@ public class Block {
 	 * Setea la coordenada y de este bloque.
 	 * @param y La nueva cooredenada y para este bloque.
 	 */
+	@Deprecated
 	public void setY(int y) {
 		this.y = y;
 	}
