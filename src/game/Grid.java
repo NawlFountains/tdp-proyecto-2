@@ -10,7 +10,7 @@ import game.tetrominos.*;
 public class Grid {
 	
 	//Atributos de clase
-	protected static final int rows= 21;
+	protected static final int rows = 21;
 	protected static final int columns = 10;
 	
 	//Atributos de instancia
@@ -49,6 +49,11 @@ public class Grid {
 	public void addTetromino() {}
 	
 	/**
+	 * Metodo que le avisa al tetromino que debe bajar
+	 */
+	protected void fall() {}
+	
+	/**
 	 * Asigna un tetromino a ser el proximo tetromino
 	 * @param Tetromino t a ser siguiente tetromino
 	 */
@@ -57,11 +62,6 @@ public class Grid {
 			nextTetromino=t;
 		}
 	} 
-	
-	/**
-	 * Metodo que le avisa al tetromino que debe bajar
-	 */
-	protected void fall() {}
 	
 	/**
 	 * Crea y retorna un tetromino con forma aleatoria
@@ -88,7 +88,18 @@ public class Grid {
 	 * @return boolean true si esta llena, false sino.
 	 */
 	public boolean checkLine(int row) {
-		boolean full=false;
+		boolean full=true; //Asumimos que esta llena y probamos si no lo esta.
+		int pointer=0;
+		if (row<0 || row>=rows) { //TODO: excepcion fila invalida
+			full=false; //Si la fila no pertence a la grilla declaramos full en false asi no se mete al while.
+		}
+		while (full && pointer<columns){
+			if (matrixBlocks[row][pointer]==null) {
+				full=false;
+			} else {
+				pointer++;
+			}
+		}
 		return full;
 	}
 	
@@ -122,6 +133,16 @@ public class Grid {
 	 */
 	public int getColumns() {
 		return columns;
+	}
+	
+	/**
+	 * Consulta el bloque en las coordenadas pasadas
+	 * @param entero x columna
+	 * @param enter y fila
+	 * @return Referencia a Block si existe un bloque alli, null sino.
+	 */
+	public Block getBlock(int x, int y) {
+		return matrixBlocks[x][y];
 	}
 	
 }
