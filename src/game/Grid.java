@@ -57,11 +57,11 @@ public class Grid { //TODO: remplazar con eje de coordenadas
 		for (int i=minRow; i<=maxRow; i++) { //Vemos si entre las filas donde estaba el tetromino se completaron
 			if (checkLine(i)) {
 				completedLines++;
-//				removeLine(i); remover la linea
+//				TODO: removeLine(i); remover la linea
 			}
 		}
 		
-//		reAdjustGrid(); reajusta la grilla
+//		TODO: reAdjustGrid(); reajusta la grilla
 		
 		switch (completedLines) { //Dependiendo de cuantas lineas se completaron retornamos ciertos puntos
 			case 1: points = 100; break;
@@ -127,7 +127,7 @@ public class Grid { //TODO: remplazar con eje de coordenadas
 			full=false; //Si la fila no pertence a la grilla declaramos full en false asi no se mete al while.
 		}
 		while (full && pointer<columns){
-			if (matrixBlocks[row][pointer]==null) {
+			if (matrixBlocks[pointer][row]==null) {
 				full=false;
 			} else {
 				pointer++;
