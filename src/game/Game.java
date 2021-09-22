@@ -29,17 +29,19 @@ public class Game {
 //	} TODO
 	
 	/**
-	 * Incrementa el puntaje actual.
+	 * Incrementa el puntaje actual y notifica a la Gui.
 	 * @param points cantidad de puntos a agregar.
 	 */
 	public void addPointers(int points) {
 		this.points += points;
+		//gui.upDatePoints();
 	}
 	
 	/**
-	 * @return el tiempo de caida de los bloques, representan segundos.
+	 * @return el tiempo de caida de los bloques y notifica a la Gui, representan segundos.
 	 */
 	public int getElapsedTime() {
+		//gui.updateElapsedTime();
 		return elapsedTime;
 	}
 	
