@@ -52,7 +52,11 @@ public class Grid {
 	 * Asigna un tetromino a ser el proximo tetromino
 	 * @param Tetromino t a ser siguiente tetromino
 	 */
-	protected void setNextTetromino(Tetromino t) {} 
+	protected void setNextTetromino(Tetromino t) {
+		if (t!=null) {
+			nextTetromino=t;
+		}
+	} 
 	
 	/**
 	 * Metodo que le avisa al tetromino que debe bajar
@@ -64,7 +68,7 @@ public class Grid {
 	 * @return Tetromino 
 	 */
 	protected Tetromino randomTetromino() {
-		Tetromino toReturn=null;
+		Tetromino toReturn;
 		int tirada= (int) Math.random()* 7; //Retorna un numero entre [0,7), no se incluye el 7.
 		switch (tirada) {
 			case 0: toReturn= new Tetromino_I(Color.CYAN);
@@ -72,8 +76,8 @@ public class Grid {
 			case 2: toReturn = new Tetromino_L(Color.ORANGE);
 			case 3: toReturn = new Tetromino_O(Color.YELLOW);
 			case 4: toReturn = new Tetromino_S(Color.GREEN);
-			case 5: toReturn= new Tetromino_T(Color.CYAN);
-			default: toReturn= new Tetromino_Z(Color.CYAN);
+			case 5: toReturn= new Tetromino_T(Color.PURPLE);
+			default: toReturn= new Tetromino_Z(Color.RED); //Este caso aplica tanto para si sale un 6 como si sale cualquier otro numero, es por seguridad.
 		}
 		return toReturn;
 	} 
@@ -102,6 +106,22 @@ public class Grid {
 	 */
 	public Tetromino getNextTetr() {
 		return nextTetromino;
+	}
+	
+	/**
+	 * Consulta filas de la grilla
+	 * @return entero filas
+	 */
+	public int getRows() {
+		return rows;
+	}
+
+	/**
+	 * Consulta columnas de la grilla
+	 * @return entero filas
+	 */
+	public int getColumns() {
+		return columns;
 	}
 	
 }
