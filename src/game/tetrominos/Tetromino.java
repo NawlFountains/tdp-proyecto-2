@@ -2,7 +2,14 @@ package game.tetrominos;
 
 import game.Grid;
 
+/**
+ * Modela un tetromino.
+ */
 public abstract class Tetromino {
+	
+	protected static final int EMPTY = 0;
+	protected static final int BLOCK = 1;
+	protected static final int CENTROID = 2;
 	
 	protected int[][] shape;
 	protected boolean collided;
@@ -10,9 +17,7 @@ public abstract class Tetromino {
 	protected Block centroid;
 	protected Block[] blocks = new Block[3];
 	
-	protected static final int EMPTY = 0;
-	protected static final int BLOCK = 1;
-	protected static final int CENTROID = 2;
+	protected Grid grid;
 	
 	/**
 	 * Crea un nuevo tetromino con el color dado.
@@ -26,12 +31,38 @@ public abstract class Tetromino {
 		blocks[2] = new Block(color);
 	}
 	
+	/**
+	 * Rota este tetromino en sentido levogiro.
+	 */
 	public void rotateLev() {
-		
+		int side = shape.length;
+		for(int cycle = 0; cycle < side / 2; cycle++) {
+			int lastIndex = side - 1 - cycle;
+			for(int index = 0 + cycle; index < lastIndex - 1; index++) {
+				int temp = shape[cycle][index];
+				shape[cycle][index] = shape[index][lastIndex];
+				shape[index][lastIndex] = shape[lastIndex][lastIndex - index];
+				shape[lastIndex][lastIndex - index] = shape[lastIndex - index][cycle];
+				shape[lastIndex - index][cycle] = temp;
+			}
+		}
 	}
 	
+	/**
+	 * Rota este tetromino en sentido dextrogiro.
+	 */
 	public void rotateDext() {
-		
+		int side = shape.length;
+		for(int cycle = 0; cycle < side / 2; cycle++) {
+			int lastIndex = side - 1 - cycle;
+			for(int index = 0 + cycle; index < lastIndex - 1; index++) {
+				int temp = shape[cycle][index];
+				shape[cycle][index] = shape[lastIndex - index][cycle];
+				shape[lastIndex - index][cycle] = shape[lastIndex][lastIndex - index];
+				shape[lastIndex][lastIndex - index] = shape[index][lastIndex];
+				shape[index][lastIndex] = temp;
+			}
+		}
 	}
 	
 	public void fall() {
@@ -43,7 +74,7 @@ public abstract class Tetromino {
 	}
 	
 	public void setGrid(Grid grid) {
-		
+		this.grid = grid;
 	}
 	
 	public void moveLeft() {
@@ -52,6 +83,15 @@ public abstract class Tetromino {
 	
 	public void moveRight() {
 		
+	}
+	
+	/**
+	 * Retorna los un arreglo con los cuatro bloques de este tetromino.
+	 * @return Un arreglo con los cuatro bloques de este tetromino.
+	 */
+	public Block[] getBlocks() {
+		Block[] allBlocks = {blocks[0], blocks[1], blocks[2], centroid};
+		return allBlocks;
 	}
 	
 	public void notifyGUI(int[][] coordinates) {
