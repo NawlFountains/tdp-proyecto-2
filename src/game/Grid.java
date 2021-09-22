@@ -7,7 +7,7 @@ import game.tetrominos.*;
  * @author Nahuel Fuentes
  *
  */
-public class Grid {
+public class Grid { //TODO: remplazar con eje de coordenadas
 	
 	//Atributos de clase
 	protected static final int rows = 21;
@@ -27,7 +27,7 @@ public class Grid {
 	 */
 	public Grid(Game game) {
 		this.game=game;
-		matrixBlocks = new Block[rows][columns];
+		matrixBlocks = new Block[columns][rows]; //Simula sistema cartesiano de coordeandas
 		fallingTetromino = randomTetromino();
 		nextTetromino = randomTetromino();
 	}
@@ -41,8 +41,8 @@ public class Grid {
 	public int deleteLines() { //	TODO: chequear lineas desde el menor bloque al mayor bloque y retornar cuantos puntos hizo y elimina las lineas que se completaron.
 		int completedLines=0;
 		int points=0;
-		int minRow = rows-rows-1;
-		int maxRow = rows+1;
+		int minRow = rows;
+		int maxRow = 0;
 		
 		Block[]  finalBlocks=fallingTetromino.getBlocks(); //Si o si son 4 bloques ya q se trata de un tetromino
 		
