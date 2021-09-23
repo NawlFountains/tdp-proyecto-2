@@ -60,7 +60,7 @@ public class Grid {
 			}
 		}
 		
-		reAdjustGrid(); //Rejustamos luego de eliminar las lineas ya que asi no perdemos las posiciones
+		fall(); 
 		
 		switch (completedLines) { //Dependiendo de cuantas lineas se completaron retornamos ciertos puntos
 			case 1:	points = 100;	break;
@@ -79,28 +79,6 @@ public class Grid {
 	private void removeLine(int line) { // TODO: necesito avisarle a los bloques que se vayan de la grilla o basta con quitar su referencia?
 		for (int x=0; x < COLUMNS; x++) {
 			removeBlock(x,line);
-		}
-	}
-	
-	/**
-	 * Reajusta la grilla para que no haya filas vacia entre filas no vacias.
-	 */
-	private void reAdjustGrid() {
-		for (int y = 0; y < ROWS; y++ ) {
-			if (isEmptyLine(y)) { 
-				int nxtNonEmptyLine = searchNextNonEmptyLine(y);
-				if (nxtNonEmptyLine == -1){ //NO encontro linea siguiente no vacia
-					y = ROWS;
-				} else {
-					for (int x = 0; x < COLUMNS; x++ ) {
-						if (blockMatrix[x][nxtNonEmptyLine]!=null) {
-							blockMatrix[x][nxtNonEmptyLine].setCoordinates(x, y); //Cambio coordenadas de bloque a fila vacia
-							addBlock(blockMatrix[x][nxtNonEmptyLine]); //Grilla agrega bloque 
-							removeBlock(x,nxtNonEmptyLine); //Grilla borra el bloque relocado.
-						}
-					}
-				}
-			}
 		}
 	}
 	
@@ -150,7 +128,24 @@ public class Grid {
 	/**
 	 * Actualiza esta grilla despues de la eliminacion de una o mas filas, haciendo caer todos los bloques que se encuentren por encima de estas.
 	 */
-	protected void fall() {}
+	protected void fall() {
+		for (int y = 0; y < ROWS; y++ ) {
+			if (isEmptyLine(y)) { 
+				int nxtNonEmptyLine = searchNextNonEmptyLine(y);
+				if (nxtNonEmptyLine == -1){ //NO encontro linea siguiente no vacia
+					y = ROWS;
+				} else {
+					for (int x = 0; x < COLUMNS; x++ ) {
+						if (blockMatrix[x][nxtNonEmptyLine]!=null) {
+							blockMatrix[x][nxtNonEmptyLine].setCoordinates(x, y); //Cambio coordenadas de bloque a fila vacia
+							addBlock(blockMatrix[x][nxtNonEmptyLine]); //Grilla agrega bloque 
+							removeBlock(x,nxtNonEmptyLine); //Grilla borra el bloque relocado.
+						}
+					}
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Asigna un tetromino a ser el proximo tetromino.
