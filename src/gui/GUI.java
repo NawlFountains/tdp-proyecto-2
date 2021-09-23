@@ -9,112 +9,92 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
 
 public class GUI extends JFrame{
 	
 	private JPanel panel;
-	private JPanel panel_1;
-	private JPanel panel_2;
-	private JPanel panel_3;
-	private JPanel panel_4;
-	private JPanel panel_5;
-	private JLabel lblNewLabel_1;
-	private JLabel lblNewLabel_1_1;
-	private JLabel lblNewLabel_1_2;
-	private JLabel lblNewLabel;
-	private JLabel lblNewLabel_1_1_1;
-	
+	private JLabel lblTime;
+	private JLabel lblInfoScore;
+	private JLabel lblScore;
+	private JLabel lblNext;
+	private JLabel lvlInfoTime;
+	private JLabel lblInfoNextTetro;
+	private JLabel background_1;
 
 	public GUI() {
 		initialize();
 	}
 
 	private void initialize() {
-		panel = new JPanel();
-		panel_2 = new JPanel();
-		panel_3 = new JPanel();
-		lblNewLabel = new JLabel("NEXT");
-		panel_1 = new JPanel();
-		lblNewLabel_1 = new JLabel("TIME");
-		lblNewLabel_1_1_1 = new JLabel("9999999");
-		panel_4 = new JPanel();
-		lblNewLabel_1_1 = new JLabel("9999999");
-		lblNewLabel_1_2 = new JLabel("SCORE");
-		panel_5 = new JPanel();
 		
-		panel.setBackground(Color.DARK_GRAY);
-		panel.setBounds(133, 10, 200, 420);
+		getContentPane().setBackground(new Color(30,30,30));
+		setResizable(false);
+		setBounds(100, 100, 565, 663);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null);
 		
-		this.getContentPane().setBackground(new Color(30,30,30));
-		this.setResizable(false);
-		this.setBounds(100, 100, 480, 480);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.getContentPane().setLayout(null);
-		this.getContentPane().add(panel);
-		this.getContentPane().add(panel_1);
-		this.getContentPane().add(panel_2);
-		
+		panelJuego();
 		infoTetro();
 		infoStats();
+		background();
+	}
+	
+	private void background() {
+		background_1 = new JLabel("");
+		background_1.setIcon(new ImageIcon(GUI.class.getResource("/gui/img/backgrounds/bg.png")));
+		background_1.setBounds(0, 0, 550, 625);
+		getContentPane().add(background_1);
+	}
+	
+	private void panelJuego() {
+		panel = new JPanel();
+		panel.setBackground(new Color(0,0,43));
+		panel.setBounds(150, 50, 250, 525);
+		getContentPane().add(panel);
 	}
 	
 	private void infoTetro() {
+		lblInfoNextTetro = new JLabel("");
+		lblInfoNextTetro.setBounds(425, 50, 100, 100);
+		getContentPane().add(lblInfoNextTetro);
 		
-		
-		lblNewLabel.setForeground(Color.ORANGE);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel.setBounds(10, 94, 80, 26);
-		
-		panel_2.setLayout(null);
-		panel_2.setBackground(Color.DARK_GRAY);
-		panel_2.setBounds(356, 10, 100, 130);
-		panel_2.add(lblNewLabel);
-		panel_2.add(panel_3);
-		
-		panel_3.setBackground(Color.GRAY);
-		panel_3.setBounds(10, 10, 80, 80);
+		lblNext = new JLabel("NEXT");
+		lblNext.setBounds(425, 175, 100, 25);
+		lblNext.setForeground(new Color(0,0,43));
+		lblNext.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNext.setFont(new Font("SansSerif", Font.BOLD, 20));
+		getContentPane().add(lblNext);
 	}
 	
 	private void infoStats() {
+		lblTime = new JLabel("TIME");
+		lblTime.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTime.setForeground(new Color(0,0,43));
+		lblTime.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblTime.setBounds(25, 350, 100, 25);
+		getContentPane().add(lblTime);
 		
-		panel_1.setBackground(Color.DARK_GRAY);
-		panel_1.setBounds(10, 230, 100, 200);
-		panel_1.setLayout(null);
-		panel_1.add(panel_4);
-		panel_1.add(panel_5);
+		lvlInfoTime = new JLabel("999999");
+		lvlInfoTime.setHorizontalAlignment(SwingConstants.CENTER);
+		lvlInfoTime.setForeground(new Color(0,0,43));
+		lvlInfoTime.setFont(new Font("SansSerif", Font.BOLD, 22));
+		lvlInfoTime.setBounds(25, 400, 100, 50);
+		getContentPane().add(lvlInfoTime);
 		
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setForeground(Color.ORANGE);
-		lblNewLabel_1.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1.setBounds(0, 46, 80, 26);
+		lblScore = new JLabel("SCORE");
+		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblScore.setForeground(new Color(0,0,43));
+		lblScore.setFont(new Font("SansSerif", Font.BOLD, 20));
+		lblScore.setBounds(25, 475, 100, 25);
+		getContentPane().add(lblScore);
 		
-		lblNewLabel_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1_1_1.setForeground(Color.ORANGE);
-		lblNewLabel_1_1_1.setFont(new Font("SansSerif", Font.BOLD, 18));
-		lblNewLabel_1_1_1.setBounds(0, 10, 80, 26);
-		
-		panel_4.setBackground(Color.GRAY);
-		panel_4.setBounds(10, 10, 80, 80);
-		panel_4.setLayout(null);
-		panel_4.add(lblNewLabel_1);
-		panel_4.add(lblNewLabel_1_1_1);
-		
-		lblNewLabel_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1_1.setForeground(Color.ORANGE);
-		lblNewLabel_1_1.setFont(new Font("SansSerif", Font.BOLD, 18));
-		lblNewLabel_1_1.setBounds(0, 10, 80, 26);
-		
-		lblNewLabel_1_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1_2.setForeground(Color.ORANGE);
-		lblNewLabel_1_2.setFont(new Font("SansSerif", Font.BOLD, 20));
-		lblNewLabel_1_2.setBounds(0, 46, 80, 26);
-		
-		panel_5.setBackground(Color.GRAY);
-		panel_5.setBounds(10, 110, 80, 80);
-		panel_5.setLayout(null);
-		panel_5.add(lblNewLabel_1_1);
-		panel_5.add(lblNewLabel_1_2);
+		lblInfoScore = new JLabel("999999");
+		lblInfoScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblInfoScore.setForeground(new Color(0,0,43));
+		lblInfoScore.setFont(new Font("SansSerif", Font.BOLD, 22));
+		lblInfoScore.setBounds(25, 525, 100, 50);
+		getContentPane().add(lblInfoScore);
 		
 	}
 }
