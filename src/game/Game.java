@@ -38,7 +38,6 @@ public class Game {
 	 */
 	public void addPoints(int points) {
 		this.points += points;
-		gui.updatePoints();
 	}
 	
 	/**
@@ -46,7 +45,6 @@ public class Game {
 	 * @return El tiempo transcurrido desde el inicio del jueg, representado en segundos.
 	 */
 	public int getElapsedTime() {
-		gui.updateElapsedTime();
 		return elapsedTime;
 	}
 	
