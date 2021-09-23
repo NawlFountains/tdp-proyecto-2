@@ -10,9 +10,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-public class GUI {
-
-	private JFrame frame;
+public class GUI extends JFrame{
+	
 	private JPanel panel;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -26,34 +25,11 @@ public class GUI {
 	private JLabel lblNewLabel_1_1_1;
 	
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI window = new GUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
 	public GUI() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
-		frame = new JFrame();
 		panel = new JPanel();
 		panel_2 = new JPanel();
 		panel_3 = new JPanel();
@@ -69,14 +45,14 @@ public class GUI {
 		panel.setBackground(Color.DARK_GRAY);
 		panel.setBounds(133, 10, 200, 420);
 		
-		frame.getContentPane().setBackground(new Color(30,30,30));
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 480, 480);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		frame.getContentPane().add(panel);
-		frame.getContentPane().add(panel_1);
-		frame.getContentPane().add(panel_2);
+		this.getContentPane().setBackground(new Color(30,30,30));
+		this.setResizable(false);
+		this.setBounds(100, 100, 480, 480);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().setLayout(null);
+		this.getContentPane().add(panel);
+		this.getContentPane().add(panel_1);
+		this.getContentPane().add(panel_2);
 		
 		infoTetro();
 		infoStats();
