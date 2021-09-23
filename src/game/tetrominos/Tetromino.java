@@ -38,10 +38,10 @@ public abstract class Tetromino {
 		int side = shape.length;
 		for(int cycle = 0; cycle < side / 2; cycle++) {
 			int lastIndex = side - 1 - cycle;
-			for(int index = 0 + cycle; index < lastIndex - 1; index++) {
-				int temp = shape[cycle][index];
-				shape[cycle][index] = shape[index][lastIndex];
-				shape[index][lastIndex] = shape[lastIndex][lastIndex - index];
+			for(int index = 0; index < lastIndex - cycle; index++) {
+				int temp = shape[cycle][cycle + index];
+				shape[cycle][cycle + index] = shape[cycle + index][lastIndex];
+				shape[cycle + index][lastIndex] = shape[lastIndex][lastIndex - index];
 				shape[lastIndex][lastIndex - index] = shape[lastIndex - index][cycle];
 				shape[lastIndex - index][cycle] = temp;
 			}
@@ -55,12 +55,12 @@ public abstract class Tetromino {
 		int side = shape.length;
 		for(int cycle = 0; cycle < side / 2; cycle++) {
 			int lastIndex = side - 1 - cycle;
-			for(int index = 0 + cycle; index < lastIndex - 1; index++) {
-				int temp = shape[cycle][index];
-				shape[cycle][index] = shape[lastIndex - index][cycle];
+			for(int index = 0; index < lastIndex - cycle; index++) {
+				int temp = shape[cycle][cycle + index];
+				shape[cycle][cycle + index] = shape[lastIndex - index][cycle];
 				shape[lastIndex - index][cycle] = shape[lastIndex][lastIndex - index];
-				shape[lastIndex][lastIndex - index] = shape[index][lastIndex];
-				shape[index][lastIndex] = temp;
+				shape[lastIndex][lastIndex - index] = shape[cycle + index][lastIndex];
+				shape[cycle + index][lastIndex] = temp;
 			}
 		}
 	}
