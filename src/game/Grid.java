@@ -188,10 +188,11 @@ public class Grid {
 		if(row < 0 || row >= ROWS) { //	TODO: 	excepcion fila invalida
 			full = false; //Si la fila no pertence a la grilla declaramos full en false asi no se mete al while.
 		}
-		while (full && pointer < COLUMNS){
+		while (full && pointer < COLUMNS) {
 			if (blockMatrix[pointer][row] == null)
 				full = false;
-			pointer++;
+			else
+				pointer++;
 		}
 		return full;
 	}
