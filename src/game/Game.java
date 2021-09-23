@@ -1,9 +1,8 @@
 package game;
 
 /**
- * Clase Grilla
+ * Modela el juego.
  * @author Islas Agustin
- *
  */
 
 public class Game {
@@ -18,7 +17,10 @@ public class Game {
 	protected boolean lost;
 	protected int timeSinceRun = 0;
 	
-	public Game(Grid grid) {
+	/**
+	 * Crea una nueva instancia del juego.
+	 */
+	public Game() {
 		grid = new Grid(this);
 		this.speed = 0;
 		this.lost = false;
@@ -29,24 +31,24 @@ public class Game {
 //	} TODO
 	
 	/**
-	 * Incrementa el puntaje actual y notifica a la Gui.
-	 * @param points cantidad de puntos a agregar.
+	 * Incrementa el puntaje actual en la cantidad pasada como parametro.
+	 * @param points Cantidad de puntos a agregar.
 	 */
-	public void addPointers(int points) {
+	public void addPoints(int points) {
 		this.points += points;
-		//gui.upDatePoints();
 	}
 	
 	/**
-	 * @return el tiempo de caida de los bloques y notifica a la Gui, representan segundos.
+	 * Retorna el tiempo transcurrido desde el inicio del juego.
+	 * @return El tiempo transcurrido desde el inicio del jueg, representado en segundos.
 	 */
 	public int getElapsedTime() {
-		//gui.updateElapsedTime();
 		return elapsedTime;
 	}
 	
 	/**
-	 * @return la grid asociada a esta intancia.
+	 * Retorna la grilla asociada a este juego.
+	 * @return la grilla asociada a este juego.
 	 */
 	public Grid getGrid() {
 		return grid;

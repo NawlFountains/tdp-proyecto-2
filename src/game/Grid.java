@@ -1,20 +1,21 @@
 package game;
 
+import java.util.Random;
+
 import game.tetrominos.*;
 
 /**
- * Clase Grilla
+ * Modela una grilla.
  * @author Nahuel Fuentes
- *
  */
 public class Grid { //TODO: remplazar con eje de coordenadas
 	
 	//Atributos de clase
-	protected static final int rows = 21;
-	protected static final int columns = 10;
+	protected static final int ROWS = 21;
+	protected static final int COLUMNS = 10;
 	
 	//Atributos de instancia
-	protected Block [][] matrixBlocks; 
+	protected Block [][] blockMatrix; 
 	protected Tetromino nextTetromino; 
 	protected Tetromino fallingTetromino;
 	protected Game game; 
@@ -22,39 +23,37 @@ public class Grid { //TODO: remplazar con eje de coordenadas
 	//Metodos
 	
 	/**
-	 * Constructor de la clase Grid
-	 * Inicializa la matriz de bloques
+	 * Crea una nueva grilla, inicializando su matriz de bloques.
 	 */
 	public Grid(Game game) {
 		this.game=game;
-		matrixBlocks = new Block[columns][rows]; //Simula sistema cartesiano de coordeandas
+		blockMatrix = new Block[COLUMNS][ROWS]; //Simula sistema cartesiano de coordeandas
 		fallingTetromino = randomTetromino();
 		nextTetromino = randomTetromino();
 	}
 	
 	
 	/**
-	 * Elimina lineas de bloques , llama a fall() y retorna 100,200,500 u 800
-	 * , si se elimina 1, 2 ,3 o 4 lineas respectivamente.
-	 * @return entero puntos por lineas eliminadas
+	 * Elimina lineas de bloques , llama a fall() y retorna 100,200,500 u 800, si se elimina 1, 2 ,3 o 4 lineas respectivamente.
+	 * @return Un entero positivo, representando los puntos obtenidos por lineas eliminadas.
 	 */
 	public int deleteLines() { //	TODO: chequear lineas desde el menor bloque al mayor bloque y retornar cuantos puntos hizo y elimina las lineas que se completaron.
-		int completedLines=0;
-		int points=0;
-		int minRow = rows;
+		int completedLines = 0;
+		int points = 0;
+		int minRow = ROWS;
 		int maxRow = 0;
 		
-		Block[]  finalBlocks=fallingTetromino.getBlocks(); //Si o si son 4 bloques ya q se trata de un tetromino
+		Block[] finalBlocks = fallingTetromino.getBlocks(); //Si o si son 4 bloques ya q se trata de un tetromino
 		
-		for (int i=0; i<=5;i++) { //Buscamos la menor y mayor fila donde hay bloques del tetromnio cayendo
-			if (finalBlocks[i].getY()>maxRow) {
+		for (int i = 0; i <= 5; i++) { //Buscamos la menor y mayor fila donde hay bloques del tetromnio cayendo
+			if (finalBlocks[i].getY() > maxRow) {
 				maxRow=finalBlocks[i].getY();
-			} else if (finalBlocks[i].getY()<minRow) {
-				minRow=finalBlocks[i].getY();
+			} else if (finalBlocks[i].getY() < minRow) {
+				minRow = finalBlocks[i].getY();
 			}
 		}
 		
-		for (int i=minRow; i<=maxRow; i++) { //Vemos si entre las filas donde estaba el tetromino se completaron
+		for (int i = minRow; i <= maxRow; i++) { //Vemos si entre las filas donde estaba el tetromino se completaron
 			if (checkLine(i)) {
 				completedLines++;
 //				TODO: removeLine(i); remover la linea
@@ -64,31 +63,31 @@ public class Grid { //TODO: remplazar con eje de coordenadas
 //		TODO: reAdjustGrid(); reajusta la grilla
 		
 		switch (completedLines) { //Dependiendo de cuantas lineas se completaron retornamos ciertos puntos
-			case 1: points = 100; break;
-			case 2: points = 200; break;
-			case 3: points = 500; break;
-			case 4: points = 800; break;
+			case 1:	points = 100;	break;
+			case 2:	points = 200;	break;
+			case 3:	points = 500;	break;
+			case 4:	points = 800;	break;
 			default: points = 0;
 		}
 		return points;
 	}
 	
 	/**
-	 * Crea y agrega un tetromino a la grilla
+	 * Agrega el siguiente tetromino a la grilla y crea un tetromino que queda en espera.
 	 */
 	public void addTetromino() {
-		fallingTetromino=nextTetromino;
-		nextTetromino= randomTetromino();
+		fallingTetromino = nextTetromino;
+		nextTetromino = randomTetromino();
 	}
 	
 	/**
-	 * Metodo que le avisa al tetromino que debe bajar
+	 * Actualiza esta grilla despues de la eliminacion de una o mas filas, haciendo caer todos los bloques que se encuentren por encima de estas.
 	 */
 	protected void fall() {}
 	
 	/**
-	 * Asigna un tetromino a ser el proximo tetromino
-	 * @param Tetromino t a ser siguiente tetromino
+	 * Asigna un tetromino a ser el proximo tetromino.
+	 * @param Tetromino t a ser siguiente tetromino.
 	 */
 	protected void setNextTetromino(Tetromino t) {
 		if (t!=null) {
@@ -97,102 +96,101 @@ public class Grid { //TODO: remplazar con eje de coordenadas
 	} 
 	
 	/**
-	 * Crea y retorna un tetromino con forma aleatoria
-	 * @return Tetromino 
+	 * Crea y retorna un tetromino con forma aleatoria.
+	 * @return Un tetromino generado aleatoriamente.
 	 */
 	protected Tetromino randomTetromino() {
-		Tetromino toReturn;
-		int tirada= (int) Math.random()* 7; //Retorna un numero entre [0,7), no se incluye el 7.
+		Tetromino toReturn = null;
+		Random rnd = new Random();		
+		int tirada = rnd.nextInt(6); //Retorna un numero entre [0,7), no se incluye el 7.
 		switch (tirada) {
-			case 0: toReturn= new Tetromino_I(Color.CYAN); break;
-			case 1: toReturn = new Tetromino_J(Color.BLUE); break;
-			case 2: toReturn = new Tetromino_L(Color.ORANGE); break;
-			case 3: toReturn = new Tetromino_O(Color.YELLOW); break;
-			case 4: toReturn = new Tetromino_S(Color.GREEN); break;
-			case 5: toReturn= new Tetromino_T(Color.PURPLE); break;
-			default: toReturn= new Tetromino_Z(Color.RED); break; //Este caso aplica tanto para si sale un 6 como si sale cualquier otro numero, es por seguridad.
+			case 0: toReturn = new Tetromino_I(Color.CYAN);		break;
+			case 1: toReturn = new Tetromino_J(Color.BLUE);		break;
+			case 2: toReturn = new Tetromino_L(Color.ORANGE);	break;
+			case 3: toReturn = new Tetromino_O(Color.YELLOW);	break;
+			case 4: toReturn = new Tetromino_S(Color.GREEN);	break;
+			case 5: toReturn = new Tetromino_T(Color.PURPLE);	break;
+			case 6: toReturn = new Tetromino_Z(Color.RED);		break;
 		}
 		return toReturn;
 	} 
 	
 	/**
-	 * Chequea que si la linea esta completa
-	 * @param entero numero de fila a chequear
-	 * @return boolean true si esta llena, false sino.
+	 * Chequea si la linea esta completa.
+	 * @param Numero de fila a chequear.
+	 * @return True si la linea esta llena, false si no.
 	 */
 	public boolean checkLine(int row) {
-		boolean full=true; //Asumimos que esta llena y probamos si no lo esta.
-		int pointer=0;
-		if (row<0 || row>=rows) { //	TODO: 	excepcion fila invalida
-			full=false; //Si la fila no pertence a la grilla declaramos full en false asi no se mete al while.
+		boolean full = true; //Asumimos que esta llena y probamos si no lo esta.
+		int pointer = 0;
+		if(row < 0 || row >= ROWS) { //	TODO: 	excepcion fila invalida
+			full = false; //Si la fila no pertence a la grilla declaramos full en false asi no se mete al while.
 		}
-		while (full && pointer<columns){
-			if (matrixBlocks[pointer][row]==null) {
-				full=false;
-			} else {
-				pointer++;
-			}
+		while (full && pointer < COLUMNS){
+			if (blockMatrix[pointer][row] == null)
+				full = false;
+			pointer++;
 		}
 		return full;
 	}
 	
 	/**
-	 * Consulta el tetromino que esta cayendo
-	 * @return Tetromino cayendo
+	 * Consulta el tetromino que esta cayendo.
+	 * @return El tetromino que esta cayendo.
 	 */
 	public Tetromino getFallingTetr() {
 		return fallingTetromino;
 	}
 	
 	/**
-	 * Consulta el siguiente tetrominio
-	 * @return Tetromino siguiente
+	 * Consulta el siguiente tetromino.
+	 * @return El siguiente tetromino.
 	 */
 	public Tetromino getNextTetr() {
 		return nextTetromino;
 	}
 	
 	/**
-	 * Consulta filas de la grilla
-	 * @return entero filas
+	 * Retorna la cantidad de filas de una grilla.
+	 * @return Cantidad de filas de una grilla.
 	 */
 	public int getRows() {
-		return rows;
+		return ROWS;
 	}
 
 	/**
-	 * Consulta columnas de la grilla
-	 * @return entero filas
+	 * Retorna la cantidad de columnas de una grilla.
+	 * @return Cantidad de columnas de una grilla.
 	 */
 	public int getColumns() {
-		return columns;
+		return COLUMNS;
 	}
 	
 	/**
-	 * Consulta el bloque en las coordenadas pasadas
-	 * @param entero x columna
-	 * @param enter y fila
-	 * @return Referencia a Block si existe un bloque alli, null sino.
+	 * Consulta el bloque en las coordenadas pasadas como parametro.
+	 * @param Coordenada x.
+	 * @param Coordenada y.
+	 * @return El bloque que se encuentra en las coordenadas pasadas como parametro, null si dicho bloque no existe.
 	 */
 	public Block getBlock(int x, int y) {
-		return matrixBlocks[x][y];  //Se conoce que puede ser null, la reponsabilidad es del cliente
+		return blockMatrix[x][y];  //Se conoce que puede ser null, la reponsabilidad es del cliente
 	}
 	
 	/**
-	 * Remueve el bloque en las coordenadas pasadas
-	 * @param entero x columna
-	 * @param entero y fila
+	 * Remueve el bloque en las coordenadas pasadas como parametro.
+	 * @param Coordenada x.
+	 * @param Coordenada y.
 	 */
 	public void removeBlock(int x, int y) {
-		matrixBlocks[x][y]=null;
+		blockMatrix[x][y] = null;
 	}
 	
 	/**
-	 * Agrega un bloque a su posicion.
-	 * @param Block bloque a añadir.
+	 * Agrega un bloque a la grilla.
+	 * @param Bloque a añadir.
 	 */
 	public void addBlock(Block b) { //El responsable de llamar a este metodo se asegura que la posicion es valida, no colisiona, y no es nula.
-		matrixBlocks[b.getX()][b.getY()]=b;
+		blockMatrix[b.getX()][b.getY()] = b;
 	}
 	
 }
