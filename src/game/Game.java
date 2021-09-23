@@ -1,5 +1,7 @@
 package game;
 
+import gui.GUI;
+
 /**
  * Modela el juego.
  * @author Islas Agustin
@@ -9,7 +11,7 @@ public class Game {
 	
 	//Atributos de instancia
 	
-	//protected Gui gui; TODO
+	protected GUI gui;
 	protected Grid grid;
 	protected int points = 0;
 	protected int speed;
@@ -36,6 +38,7 @@ public class Game {
 	 */
 	public void addPoints(int points) {
 		this.points += points;
+		gui.updatePoints();
 	}
 	
 	/**
@@ -43,6 +46,7 @@ public class Game {
 	 * @return El tiempo transcurrido desde el inicio del jueg, representado en segundos.
 	 */
 	public int getElapsedTime() {
+		gui.updateElapsedTime();
 		return elapsedTime;
 	}
 	

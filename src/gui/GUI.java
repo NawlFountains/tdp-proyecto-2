@@ -9,6 +9,9 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+
+import game.Game;
+
 import javax.swing.ImageIcon;
 
 public class GUI extends JFrame{
@@ -21,11 +24,37 @@ public class GUI extends JFrame{
 	private JLabel lvlInfoTime;
 	private JLabel lblInfoNextTetro;
 	private JLabel background_1;
+	protected Game game;
 
 	public GUI() {
 		initialize();
 	}
+	
+	/**
+	 * Metodos de la GUI
+	 */
+	
+	public void updateGrid() {
+		
+	}
+	
+	public void updateCell() {
+		
+	}
 
+	public void updatePoints() {
+		
+	}
+	
+	public void updateElapsedTime() {
+		
+	}
+	
+	public void updateNextTetr() {
+		
+	}
+	
+	
 	private void initialize() {
 		
 		getContentPane().setBackground(new Color(30,30,30));
