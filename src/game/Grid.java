@@ -56,11 +56,11 @@ public class Grid { //TODO: remplazar con eje de coordenadas
 		for (int i = minRow; i <= maxRow; i++) { //Vemos si entre las filas donde estaba el tetromino se completaron
 			if (checkLine(i)) {
 				completedLines++;
-//				TODO: removeLine(i); remover la linea
+				removeLine(i); //remover la linea si esta completa
 			}
 		}
 		
-//		TODO: reAdjustGrid(); reajusta la grilla
+		reAdjustGrid(); //Rejustamos luego de eliminar las lineas ya que asi no perdemos las posiciones
 		
 		switch (completedLines) { //Dependiendo de cuantas lineas se completaron retornamos ciertos puntos
 			case 1:	points = 100;	break;
@@ -70,6 +70,73 @@ public class Grid { //TODO: remplazar con eje de coordenadas
 			default: points = 0;
 		}
 		return points;
+	}
+	
+	/**
+	 * Remueve todos los elementos de la linea pasada por parametro
+	 * @param linea a remover
+	 */
+	private void removeLine(int line) { // TODO: necesito avisarle a los bloques que se vayan de la grilla o basta con quitar su referencia?
+		for (int x=0; x < COLUMNS; x++) {
+			removeBlock(x,line);
+		}
+	}
+	
+	/**
+	 * Reajusta la grilla para que no haya filas vacia entre filas no vacias.
+	 */
+	private void reAdjustGrid() {
+		for (int y = 0; y < ROWS; y++ ) {
+			if (isEmptyLine(y)) { 
+				int nxtNonEmptyLine = searchNextNonEmptyLine(y);
+				if (nxtNonEmptyLine == -1){ //NO encontro linea siguiente no vacia
+					y = ROWS;
+				} else {
+					for (int x = 0; x < COLUMNS; x++ ) {
+						if (blockMatrix[x][nxtNonEmptyLine]!=null) {
+							blockMatrix[x][nxtNonEmptyLine].setCoordinates(x, y); //Cambio coordenadas de bloque a fila vacia
+							addBlock(blockMatrix[x][nxtNonEmptyLine]); //Grilla agrega bloque 
+							removeBlock(x,nxtNonEmptyLine); //Grilla borra el bloque relocado.
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Consulta si la linea pasada por parametro esta vacia
+	 * @param linea a consultar
+	 * @return true si esta vacia, false sino
+	 */
+	private boolean isEmptyLine(int line) {
+		boolean empty=true;
+		int x=0;
+		while (empty && x < COLUMNS) {
+			if (blockMatrix[x][line]!=null) {
+				empty=false;
+			}
+			x++;
+		}
+		return empty;
+	}
+	
+	
+	/**
+	 * Busca la proxima linea no vacia partiendo de la pasada por parametro
+	 * @param linea desde donde buscar 
+	 * @return entero linea encontrada que no es vacia, -1 si no encontro.
+	 */
+	private int searchNextNonEmptyLine(int line) {
+		int nxtLine = -1;
+		int y = line;
+		while (y < ROWS && nxtLine == -1) {
+			if (!isEmptyLine(y)) {
+				nxtLine=y;
+			}
+			y++;
+		}
+		return nxtLine;
 	}
 	
 	/**
