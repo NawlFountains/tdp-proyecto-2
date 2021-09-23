@@ -8,7 +8,7 @@ import game.tetrominos.*;
  * Modela una grilla.
  * @author Nahuel Fuentes
  */
-public class Grid { //TODO: remplazar con eje de coordenadas
+public class Grid {
 	
 	//Atributos de clase
 	protected static final int ROWS = 21;
@@ -37,7 +37,7 @@ public class Grid { //TODO: remplazar con eje de coordenadas
 	 * Elimina lineas de bloques , llama a fall() y retorna 100,200,500 u 800, si se elimina 1, 2 ,3 o 4 lineas respectivamente.
 	 * @return Un entero positivo, representando los puntos obtenidos por lineas eliminadas.
 	 */
-	public int deleteLines() { //	TODO: chequear lineas desde el menor bloque al mayor bloque y retornar cuantos puntos hizo y elimina las lineas que se completaron.
+	public int deleteLines() { 
 		int completedLines = 0;
 		int points = 0;
 		int minRow = ROWS;
