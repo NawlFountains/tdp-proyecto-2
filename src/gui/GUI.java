@@ -11,8 +11,11 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 
 import game.Game;
+import game.tetrominos.Block;
+import game.tetrominos.Tetromino;
 
 import javax.swing.ImageIcon;
+import java.awt.GridLayout;
 
 public class GUI extends JFrame{
 	
@@ -25,6 +28,8 @@ public class GUI extends JFrame{
 	private JLabel lblInfoNextTetro;
 	private JLabel background_1;
 	protected Game game;
+	protected Cell[][] cells;
+	protected Cell[][] nextTet;
 
 	public GUI() {
 		initialize();
@@ -50,7 +55,15 @@ public class GUI extends JFrame{
 		
 	}
 	
-	public void updateNextTetr() {
+	public void updateNextTetr() { 
+		int x=0; 
+		int y=0;
+		Block[] blocks=game.getGrid().getNextTetr().getBlocks();
+		for (int i=0; i<blocks.length; i++) {
+			x=blocks[i].getX();
+			y=blocks[i].getY();
+			nextTet[x][y].setColor(blocks[i].getColor());;
+		}
 		
 	}
 	
@@ -62,11 +75,12 @@ public class GUI extends JFrame{
 		setBounds(100, 100, 565, 663);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
-		
 		panelJuego();
 		infoTetro();
 		infoStats();
 		background();
+		
+		
 	}
 	
 	private void background() {
@@ -80,11 +94,13 @@ public class GUI extends JFrame{
 		panel = new JPanel();
 		panel.setBackground(new Color(0,0,43));
 		panel.setBounds(150, 50, 250, 525);
+		panel.setLayout(new GridLayout(21, 10, 0, 0));
 		getContentPane().add(panel);
 	}
 	
 	private void infoTetro() {
 		lblInfoNextTetro = new JLabel("");
+		lblInfoNextTetro.setHorizontalAlignment(SwingConstants.CENTER);
 		lblInfoNextTetro.setBounds(425, 50, 100, 100);
 		getContentPane().add(lblInfoNextTetro);
 		
