@@ -48,7 +48,7 @@ public class GUI extends JFrame{
 	}
 
 	public void updatePoints() {
-		
+		lblInfoScore.setText(""+game.getPoints());
 	}
 	
 	public void updateElapsedTime() {

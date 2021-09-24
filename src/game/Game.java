@@ -63,4 +63,11 @@ public class Game {
 	public boolean lost() {
 		return lost;
 	}
+	/*
+	 * Retorna los puntos acumulados
+	 * @return los puntos acumulados
+	 * */
+	public int getPoints() {
+		return points;
+	}
 }
