@@ -33,8 +33,31 @@ public class GUI extends JFrame{
 	protected ImageIcon miniTetro;
 
 	public GUI() {
+		nextTet=new Cell[4][4];
+		game=new Game();
 		initialize();
+		updateElapsedTime();
+		updatePoints();
+		updateNextTetr();
 	}
+	
+	/**
+	 * Metodo Encargado de inicializar la GUI
+	 */
+	
+	private void initialize() {
+		getContentPane().setBackground(new Color(30,30,30));
+		setResizable(false);
+		setBounds(100, 100, 565, 663);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null);
+		
+		panelJuego();
+		infoTetro();
+		infoStats();
+		background();
+	}
+	
 	
 	/**
 	 * Metodos de la GUI
@@ -55,6 +78,10 @@ public class GUI extends JFrame{
 	public void updateElapsedTime() {
 		lblInfoTime.setText(""+game.getElapsedTime());
 	}
+	
+	/**
+	 * Muetra el tetromino siguiente en el panelTetro
+	 */
 	
 	public void updateNextTetr() { 
 		int x=0; 
@@ -84,27 +111,10 @@ public class GUI extends JFrame{
 		}
 		
 	}
-	
-	
-	private void initialize() {
-		nextTet=new Cell[4][4];
-		game=new Game();
-		
-		getContentPane().setBackground(new Color(30,30,30));
-		setResizable(false);
-		setBounds(100, 100, 565, 663);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		getContentPane().setLayout(null);
-		panelJuego();
-		infoTetro();
-		infoStats();
-		background();
-		
-		updateElapsedTime();
-		updatePoints();
-		updateNextTetr();
-		
-	}
+
+	/**
+	 * Crea un label con una imagen de fondo
+	 */
 	
 	private void background() {
 		background_1 = new JLabel("");
@@ -113,6 +123,10 @@ public class GUI extends JFrame{
 		getContentPane().add(background_1);
 	}
 	
+	/**
+	 * Crea el panel del juego, por donde caen los tetrominos
+	 */
+	
 	private void panelJuego() {
 		panel = new JPanel();
 		panel.setBackground(new Color(0,0,43));
@@ -120,6 +134,10 @@ public class GUI extends JFrame{
 		panel.setLayout(new GridLayout(21, 10, 0, 0));
 		getContentPane().add(panel);
 	}
+	
+	/**
+	 * Crea un panel en el cual se cargara el tetromino siguiente y un cartel con el texto next
+	 */
 	
 	private void infoTetro() {
 		panelTetro = new JPanel();
@@ -135,6 +153,10 @@ public class GUI extends JFrame{
 		lblNext.setFont(new Font("SansSerif", Font.BOLD, 20));
 		getContentPane().add(lblNext);
 	}
+	
+	/**
+	 * crea una serie de labels para mostrar los stats de juego
+	 */
 	
 	private void infoStats() {
 		lblTime = new JLabel("TIME");
