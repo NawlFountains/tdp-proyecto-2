@@ -24,12 +24,13 @@ public class GUI extends JFrame{
 	private JLabel lblInfoScore;
 	private JLabel lblScore;
 	private JLabel lblNext;
-	private JLabel lvlInfoTime;
-	private JLabel lblInfoNextTetro;
+	private JLabel lblInfoTime;
 	private JLabel background_1;
+	private JPanel panelTetro;
 	protected Game game;
 	protected Cell[][] cells;
 	protected Cell[][] nextTet;
+	protected ImageIcon miniTetro;
 
 	public GUI() {
 		initialize();
@@ -52,7 +53,7 @@ public class GUI extends JFrame{
 	}
 	
 	public void updateElapsedTime() {
-		
+		lblInfoTime.setText(""+game.getElapsedTime());
 	}
 	
 	public void updateNextTetr() { 
@@ -62,13 +63,32 @@ public class GUI extends JFrame{
 		for (int i=0; i<blocks.length; i++) {
 			x=blocks[i].getX();
 			y=blocks[i].getY();
-			nextTet[x][y].setColor(blocks[i].getColor());;
+			nextTet[x][y]=new Cell(blocks[i].getColor());
+		}
+
+		for(int i=0;i<nextTet.length;i++) {
+			for(int j=0; j<nextTet[i].length;j++) {
+				if(nextTet[i][j]!=null) {
+					miniTetro=new ImageIcon(GUI.class.getResource(nextTet[i][j].getImagePath()));
+					JLabel cubito= new JLabel();
+					cubito.setIcon(miniTetro);
+					panelTetro.add(cubito);
+				}
+				else {
+					miniTetro=new ImageIcon(GUI.class.getResource("/gui/img/backgrounds/nextTet.png"));
+					JLabel cubito= new JLabel();
+					cubito.setIcon(miniTetro);
+					panelTetro.add(cubito);
+				}
+			}
 		}
 		
 	}
 	
 	
 	private void initialize() {
+		nextTet=new Cell[4][4];
+		game=new Game();
 		
 		getContentPane().setBackground(new Color(30,30,30));
 		setResizable(false);
@@ -80,6 +100,9 @@ public class GUI extends JFrame{
 		infoStats();
 		background();
 		
+		updateElapsedTime();
+		updatePoints();
+		updateNextTetr();
 		
 	}
 	
@@ -99,10 +122,11 @@ public class GUI extends JFrame{
 	}
 	
 	private void infoTetro() {
-		lblInfoNextTetro = new JLabel("");
-		lblInfoNextTetro.setHorizontalAlignment(SwingConstants.CENTER);
-		lblInfoNextTetro.setBounds(425, 50, 100, 100);
-		getContentPane().add(lblInfoNextTetro);
+		panelTetro = new JPanel();
+		panelTetro.setBackground(new Color(0, 128, 128));
+		panelTetro.setBounds(425, 50, 100, 100);
+		panelTetro.setLayout(new GridLayout(4, 4, 0, 0));
+		getContentPane().add(panelTetro);
 		
 		lblNext = new JLabel("NEXT");
 		lblNext.setBounds(425, 175, 100, 25);
@@ -120,12 +144,12 @@ public class GUI extends JFrame{
 		lblTime.setBounds(25, 350, 100, 25);
 		getContentPane().add(lblTime);
 		
-		lvlInfoTime = new JLabel("999999");
-		lvlInfoTime.setHorizontalAlignment(SwingConstants.CENTER);
-		lvlInfoTime.setForeground(new Color(0,0,43));
-		lvlInfoTime.setFont(new Font("SansSerif", Font.BOLD, 22));
-		lvlInfoTime.setBounds(25, 400, 100, 50);
-		getContentPane().add(lvlInfoTime);
+		lblInfoTime = new JLabel("999999");
+		lblInfoTime.setHorizontalAlignment(SwingConstants.CENTER);
+		lblInfoTime.setForeground(new Color(0,0,43));
+		lblInfoTime.setFont(new Font("SansSerif", Font.BOLD, 22));
+		lblInfoTime.setBounds(25, 400, 100, 50);
+		getContentPane().add(lblInfoTime);
 		
 		lblScore = new JLabel("SCORE");
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);

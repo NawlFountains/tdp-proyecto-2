@@ -8,6 +8,10 @@ public class Cell {
 	public Cell() {
 		
 	}
+	
+	public Cell(Color c) {
+		setColor(c);
+	}
  
 	public void setColor(Color c) {
 		switch (c) {
@@ -19,6 +23,10 @@ public class Cell {
 			case PURPLE: emptyCellImagePath="/gui/img/bloques/T.png";
 			case RED: emptyCellImagePath="/gui/img/bloques/Z.png";
 		}
+	}
+	
+	public String getImagePath() {
+		return emptyCellImagePath;
 	}
 	
 }
