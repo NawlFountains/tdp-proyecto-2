@@ -57,7 +57,7 @@ public class Game {
 	}
 	
 	/**
-	 * Controla si el juego terminó.
+	 * Consulta si el juego terminó o no.
 	 * @return true si el juego terminó, false en caso contrario.
 	 */
 	public boolean lost() {
