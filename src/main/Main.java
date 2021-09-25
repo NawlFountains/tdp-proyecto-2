@@ -16,7 +16,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		Game game = new Game();
-		GUI ventana = new GUI();
+		GUI ventana = game.getGUI();
 		Thread gameThread = new GameThread(game);
 		Thread timerThread = new TimerThread(game);
 		
