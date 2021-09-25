@@ -27,14 +27,20 @@ public class GUI extends JFrame{
 	private JLabel lblInfoTime;
 	private JLabel background_1;
 	private JPanel panelTetro;
-	protected Game game;
 	protected Cell[][] cells;
 	protected Cell[][] nextTet;
 	protected ImageIcon miniTetro;
+	
+	protected Game game;
 
-	public GUI() {
-		nextTet=new Cell[4][4];
-		game=new Game();
+	/**
+	 * Crea una nueva GUI y la asocia al juego pasado como parametro.
+	 * @param game El juego asociado a esta GUI.
+	 */
+	public GUI(Game game) {
+		nextTet = new Cell[4][4];
+		this.game = game;
+		
 		initialize();
 		updateElapsedTime();
 		updatePoints();
@@ -82,34 +88,39 @@ public class GUI extends JFrame{
 	/**
 	 * Muetra el tetromino siguiente en el panelTetro
 	 */
-	
 	public void updateNextTetr() { 
-		int x=0; 
-		int y=0;
-		Block[] blocks=game.getGrid().getNextTetr().getBlocks();
-		for (int i=0; i<blocks.length; i++) {
-			x=blocks[i].getX();
-			y=blocks[i].getY();
-			nextTet[x][y]=new Cell(blocks[i].getColor());
-		}
-
-		for(int i=0;i<nextTet.length;i++) {
-			for(int j=0; j<nextTet[i].length;j++) {
-				if(nextTet[i][j]!=null) {
-					miniTetro=new ImageIcon(GUI.class.getResource(nextTet[i][j].getImagePath()));
-					JLabel cubito= new JLabel();
-					cubito.setIcon(miniTetro);
-					panelTetro.add(cubito);
-				}
-				else {
-					miniTetro=new ImageIcon(GUI.class.getResource("/gui/img/backgrounds/nextTet.png"));
-					JLabel cubito= new JLabel();
-					cubito.setIcon(miniTetro);
-					panelTetro.add(cubito);
-				}
+		int x = 0; 
+		int y = 0;
+		Block[] blocks = game.getGrid().getNextTetr().getBlocks();
+		
+		for(int i = 0; i < nextTet.length; i++) {
+			for(int j = 0; j < nextTet[i].length; j++) {
+				nextTet[i][j] = new Cell();
+				panelTetro.add(nextTet[i][j]);
 			}
 		}
 		
+		for (int i = 0; i < blocks.length; i++) {
+			x = blocks[i].getX();
+			y = blocks[i].getY();
+			nextTet[x][y].setColor(blocks[i].getColor());
+		}
+		
+//		for(int i = 0; i < nextTet.length; i++) {
+//			for(int j = 0; j < nextTet[i].length; j++) {
+//				if(nextTet[i][j] != null) {
+//					miniTetro = new ImageIcon(GUI.class.getResource(nextTet[i][j].getImagePath()));
+//					JLabel cubito = new JLabel();
+//					cubito.setIcon(miniTetro);
+//					panelTetro.add(cubito);
+//				} else {
+//					miniTetro = new ImageIcon(GUI.class.getResource("/gui/img/backgrounds/nextTet.png"));
+//					JLabel cubito = new JLabel();
+//					cubito.setIcon(miniTetro);
+//					panelTetro.add(cubito);
+//				}
+//			}
+//		}
 	}
 
 	/**
