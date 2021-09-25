@@ -11,19 +11,21 @@ public class Game {
 	
 	//Atributos de instancia
 	
-	protected GUI gui;
 	protected Grid grid;
 	protected int points = 0;
 	protected int speed;
 	protected int elapsedTime = 0;
 	protected boolean lost;
 	protected int timeSinceRun = 0;
+
+	protected GUI gui;
 	
 	/**
 	 * Crea una nueva instancia del juego.
 	 */
 	public Game() {
 		grid = new Grid(this);
+		gui = new GUI(this);
 		this.speed = 0;
 		this.lost = false;
 	}
@@ -63,6 +65,7 @@ public class Game {
 	public boolean lost() {
 		return lost;
 	}
+	
 	/*
 	 * Retorna los puntos acumulados
 	 * @return los puntos acumulados
@@ -70,4 +73,13 @@ public class Game {
 	public int getPoints() {
 		return points;
 	}
+	
+	/**
+	 * Retorna la GUI asociada a este juego.
+	 * @return La GUI asociada a este juego.
+	 */
+	public GUI getGUI() {
+		return gui;
+	}
+	
 }
