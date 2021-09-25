@@ -240,4 +240,12 @@ public class Grid {
 		blockMatrix[b.getX()][b.getY()] = b;
 	}
 	
+	/**
+	 * Retorna el juego asociado a esta grilla.
+	 * @return El juego asociado a esta grilla.
+	 */
+	public Game getGame() {
+		return game;
+	}
+	
 }
