@@ -7,9 +7,9 @@ import game.Grid;
  */
 public abstract class Tetromino {
 	
-	protected static final int EMPTY = 0;
-	protected static final int BLOCK = 1;
-	protected static final int CENTROID = 2;
+	public static final int EMPTY = 0;
+	public static final int BLOCK = 1;
+	public static final int CENTROID = 2;
 	
 	protected int[][] shape;
 	protected boolean collided;

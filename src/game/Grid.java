@@ -11,8 +11,8 @@ import game.tetrominos.*;
 public class Grid {
 	
 	//Atributos de clase
-	protected static final int ROWS = 21;
-	protected static final int COLUMNS = 10;
+	public static final int ROWS = 21;
+	public static final int COLUMNS = 10;
 	
 	//Atributos de instancia
 	protected Block [][] blockMatrix; 
@@ -26,7 +26,7 @@ public class Grid {
 	 * Crea una nueva grilla, inicializando su matriz de bloques.
 	 */
 	public Grid(Game game) {
-		this.game=game;
+		this.game = game;
 		blockMatrix = new Block[COLUMNS][ROWS]; //Simula sistema cartesiano de coordeandas
 		fallingTetromino = randomTetromino();
 		nextTetromino = randomTetromino();
@@ -77,8 +77,8 @@ public class Grid {
 	 * @param linea a remover
 	 */
 	private void removeLine(int line) { // TODO: necesito avisarle a los bloques que se vayan de la grilla o basta con quitar su referencia?
-		for (int x=0; x < COLUMNS; x++) {
-			removeBlock(x,line);
+		for (int x = 0; x < COLUMNS; x++) {
+			removeBlock(x, line);
 		}
 	}
 	
@@ -88,11 +88,11 @@ public class Grid {
 	 * @return true si esta vacia, false sino
 	 */
 	private boolean isEmptyLine(int line) {
-		boolean empty=true;
-		int x=0;
+		boolean empty = true;
+		int x = 0;
 		while (empty && x < COLUMNS) {
-			if (blockMatrix[x][line]!=null) {
-				empty=false;
+			if (blockMatrix[x][line] != null) {
+				empty = false;
 			}
 			x++;
 		}
@@ -110,7 +110,7 @@ public class Grid {
 		int y = line;
 		while (y < ROWS && nxtLine == -1) {
 			if (!isEmptyLine(y)) {
-				nxtLine=y;
+				nxtLine = y;
 			}
 			y++;
 		}
@@ -139,7 +139,7 @@ public class Grid {
 						if (blockMatrix[x][nxtNonEmptyLine]!=null) {
 							blockMatrix[x][nxtNonEmptyLine].setCoordinates(x, y); //Cambio coordenadas de bloque a fila vacia
 							addBlock(blockMatrix[x][nxtNonEmptyLine]); //Grilla agrega bloque 
-							removeBlock(x,nxtNonEmptyLine); //Grilla borra el bloque relocado.
+							removeBlock(x, nxtNonEmptyLine); //Grilla borra el bloque relocado.
 						}
 					}
 				}
@@ -152,8 +152,8 @@ public class Grid {
 	 * @param Tetromino t a ser siguiente tetromino.
 	 */
 	protected void setNextTetromino(Tetromino t) {
-		if (t!=null) {
-			nextTetromino=t;
+		if (t != null) {
+			nextTetromino = t;
 		}
 	} 
 	
@@ -211,22 +211,6 @@ public class Grid {
 	 */
 	public Tetromino getNextTetr() {
 		return nextTetromino;
-	}
-	
-	/**
-	 * Retorna la cantidad de filas de una grilla.
-	 * @return Cantidad de filas de una grilla.
-	 */
-	public int getRows() {
-		return ROWS;
-	}
-
-	/**
-	 * Retorna la cantidad de columnas de una grilla.
-	 * @return Cantidad de columnas de una grilla.
-	 */
-	public int getColumns() {
-		return COLUMNS;
 	}
 	
 	/**
