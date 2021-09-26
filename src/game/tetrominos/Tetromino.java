@@ -1,6 +1,7 @@
 package game.tetrominos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,34 +46,128 @@ public abstract class Tetromino {
 	 * Rota este tetromino en sentido levogiro.
 	 */
 	public void rotateLev() {
-		int side = shape.length;
-		for(int cycle = 0; cycle < side / 2; cycle++) {
-			int lastIndex = side - 1 - cycle;
-			for(int index = 0; index < lastIndex - cycle; index++) {
-				int temp = shape[cycle][cycle + index];
-				shape[cycle][cycle + index] = shape[cycle + index][lastIndex];
-				shape[cycle + index][lastIndex] = shape[lastIndex][lastIndex - index];
-				shape[lastIndex][lastIndex - index] = shape[lastIndex - index][cycle];
-				shape[lastIndex - index][cycle] = temp;
-			}
-		}
+		int[][] shapeMatrix = getShape();
+		rotateMatrixLev(shapeMatrix);
+		rotate(shapeMatrix);
 	}
 	
 	/**
 	 * Rota este tetromino en sentido dextrogiro.
 	 */
 	public void rotateDext() {
-		int side = shape.length;
-		for(int cycle = 0; cycle < side / 2; cycle++) {
-			int lastIndex = side - 1 - cycle;
-			for(int index = 0; index < lastIndex - cycle; index++) {
-				int temp = shape[cycle][cycle + index];
-				shape[cycle][cycle + index] = shape[lastIndex - index][cycle];
-				shape[lastIndex - index][cycle] = shape[lastIndex][lastIndex - index];
-				shape[lastIndex][lastIndex - index] = shape[cycle + index][lastIndex];
-				shape[cycle + index][lastIndex] = temp;
+		int[][] shapeMatrix = getShape();
+		rotateMatrixDext(shapeMatrix);
+		rotate(shapeMatrix);
+	}
+	
+	/**
+	 * Rota este tetromino segun la matriz dada.
+	 */
+	public void rotate(int[][] shapeMatrix) {
+		Block[] tetro = getBlocks();
+		List<int[]> rotatedCollisionCoords = new ArrayList<int[]>(tetro.length);
+		int[] centroidPos = getCentroidPosInShape(shapeMatrix);
+		for(int i = 0; i < shapeMatrix.length; i++)
+			for(int j = 0; j < shapeMatrix[0].length; j++)
+				if(shapeMatrix[i][j] != EMPTY) {
+					int rotatedX = centroid.getX() - centroidPos[0] + i;
+					int rotatedY = centroid.getY() - centroidPos[1] + j;
+					rotatedCollisionCoords.add(new int[] {rotatedX, rotatedY});
+				}
+		if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
+			reposition((int[][])rotatedCollisionCoords.toArray());
+		} else {
+			shift(rotatedCollisionCoords, -1);
+			if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
+				reposition((int[][])rotatedCollisionCoords.toArray());
+			} else {
+				shift(rotatedCollisionCoords, 2);
+				if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
+					reposition((int[][])rotatedCollisionCoords.toArray());
+				}
 			}
 		}
+	}
+	
+	/**
+	 * Chequea si alguna coordenada de la lista pasada como parametro esta fuera de los limites de la grilla.
+	 * @param coords Una lista de coordenadas expresadas como arreglo arr de dos componentes tal que arr[0] == x, arr[1] == y.
+	 * @return True si alguna de las coordenadas esta fuera de los limites de la grilla, false si no.
+	 */
+	private boolean outOfBounds(List<int[]> coords) {
+		boolean outOfBounds = false;
+		int[] pair;
+		for(int i = 0; i < coords.size() && !outOfBounds; i++) {
+			pair = coords.get(i);
+			if(0 < pair[0] && pair[0] < Grid.COLUMNS && 0 < pair[1] && pair[1] < Grid.ROWS)
+				outOfBounds = true;
+		}
+		return outOfBounds;
+	}
+	
+	/**
+	 * Mueve la coordenada x de la lista de coordenadas pasada como parametro en la cantidad de unidades dada.
+	 * @param coords Una lista de coordenadas expresadas como arreglo arr de dos componentes tal que arr[0] == x, arr[1] == y.
+	 * @param shift El valor en el cual se desplazara la coordenada x de cada par de coordenadas.
+	 */
+	private void shift(List<int[]> coords, int shift) {
+		for(int i = 0; i < coords.size(); i++) {
+			coords.get(i)[0] += shift;
+		}
+	}
+	
+	/**
+	 * Dada una lista de coordenadas, retorna un arreglo de los bloques que se encuentran en esas coordenadas en la grilla.
+	 * Este metodo no chequea la validez de las coordenadas pasadas como parametro.
+	 * @param coords Una lista de coordenadas expresadas como arreglo arr de dos componentes tal que arr[0] == x, arr[1] == y.
+	 * @return Un arreglo con los bloques que se encuantran en las coordenadas pasadas como parametro.
+	 */
+	private Block[] blocksFromCoords(List<int[]> coords) {
+		int[] pair;
+		Block[] blocks = new Block[coords.size()];
+		for(int i = 0; i < coords.size(); i++) {
+			pair = coords.get(i);
+			blocks[i] = grid.getBlock(pair[0], pair[1]);
+		}
+		return blocks;
+	}
+	
+	/**
+	 * Retorna la posicion del centroide en la matriz dada.
+	 * @param shapeMatrix Una matriz de enteros.
+	 * @return Las coordenadas del centroide, como arreglo arr de 2 componentes tal que arr[0] = x, arr[1] = y. 
+	 */
+	protected int[] getCentroidPosInShape(int[][] shapeMatrix) {
+		int[] coords = new int[2];
+		boolean found = false;
+		for(int x = 0; x < shapeMatrix.length && !found; x++)
+			for(int y = 0; y < shapeMatrix[0].length && !found; y++)
+				if(shapeMatrix[x][y] == CENTROID) {
+					coords[0] = x;
+					coords[1] = y;
+					found = true;
+				}
+		return coords;
+	}
+	
+	/**
+	 * Reposiciona los bloques de este tetromino en la grilla de acuerdo a las coordenadas pasadas como parametro.
+	 * @param newBlockCoords Las nuevas coordenadas de este tetromino en la grilla.
+	 */
+	protected void reposition(int[][] newBlockCoords) {
+		Set<List<Integer>> toUpdate = new HashSet<List<Integer>>(8);
+		// Remueve bloques
+		for(Block block : blocks) {
+			grid.removeBlock(block.getX(), block.getY());
+			toUpdate.add(Arrays.asList(new Integer[] {block.getX(), block.getY()}));
+		}
+		// Añade bloques
+		for(int i = 0; i < blocks.length; i++) {
+			blocks[i].setCoordinates(newBlockCoords[i][0], newBlockCoords[i][1]);
+			grid.addBlock(blocks[i]);
+			toUpdate.add(Arrays.asList(new Integer[] {blocks[i].getX(), blocks[i].getY()}));
+		}
+		notifyGUI(toUpdate);
 	}
 	
 	/**
@@ -86,23 +181,11 @@ public abstract class Tetromino {
 		if(collidesBottom(tetrBlocks)) {
 			falling = false;
 		} else {
-			Set<List<Integer>> toUpdate = new HashSet<List<Integer>>(8);
-			for(Block b : tetrBlocks) {
-				grid.removeBlock(b.getX(), b.getY());
-				List<Integer> coords = new ArrayList<Integer>(2);
-				coords.add(b.getX());
-				coords.add(b.getY());
-				toUpdate.add(coords);
+			int[][] newBlockCoords = new int[tetrBlocks.length][];
+			for(int i = 0; i < tetrBlocks.length; i++) {
+				newBlockCoords[i] = new int[] {blocks[i].getX(), blocks[i].getY() - 1};
 			}
-			for(Block b : tetrBlocks) {
-				b.setCoordinates(b.getX(), b.getY() - 1);
-				grid.addBlock(b);
-				List<Integer> coords = new ArrayList<Integer>(2);
-				coords.add(b.getX());
-				coords.add(b.getY());
-				toUpdate.add(coords);
-			}
-			notifyGUI(toUpdate);
+			reposition(newBlockCoords);
 		}
 	}
 	
@@ -198,24 +281,12 @@ public abstract class Tetromino {
 		if(!falling)
 			throw new TetrominoException("Se intento mover un tetromino que no esta cayendo");
 		Block[] tetrBlocks = getBlocks();
-		if(collidesLeft(tetrBlocks)) {
-			Set<List<Integer>> toUpdate = new HashSet<List<Integer>>(8);
-			for(Block b : tetrBlocks) {
-				grid.removeBlock(b.getX(), b.getY());
-				List<Integer> coords = new ArrayList<Integer>(2);
-				coords.add(b.getX());
-				coords.add(b.getY());
-				toUpdate.add(coords);
+		if(!collidesLeft(tetrBlocks)) {
+			int[][] newBlockCoords = new int[tetrBlocks.length][];
+			for(int i = 0; i < tetrBlocks.length; i++) {
+				newBlockCoords[i] = new int[] {blocks[i].getX() - 1, blocks[i].getY()};
 			}
-			for(Block b : tetrBlocks) {
-				b.setCoordinates(b.getX() - 1, b.getY());
-				grid.addBlock(b);
-				List<Integer> coords = new ArrayList<Integer>(2);
-				coords.add(b.getX());
-				coords.add(b.getY());
-				toUpdate.add(coords);
-			}
-			notifyGUI(toUpdate);
+			reposition(newBlockCoords);
 		}
 	}
 	
@@ -227,24 +298,12 @@ public abstract class Tetromino {
 		if(!falling)
 			throw new TetrominoException("Se intento mover un tetromino que no esta cayendo");
 		Block[] tetrBlocks = getBlocks();
-		if(collidesLeft(tetrBlocks)) {
-			Set<List<Integer>> toUpdate = new HashSet<List<Integer>>(8);
-			for(Block b : tetrBlocks) {
-				grid.removeBlock(b.getX(), b.getY());
-				List<Integer> coords = new ArrayList<Integer>(2);
-				coords.add(b.getX());
-				coords.add(b.getY());
-				toUpdate.add(coords);
+		if(!collidesRight(tetrBlocks)) {
+			int[][] newBlockCoords = new int[tetrBlocks.length][];
+			for(int i = 0; i < tetrBlocks.length; i++) {
+				newBlockCoords[i] = new int[] {blocks[i].getX() + 1, blocks[i].getY()};
 			}
-			for(Block b : tetrBlocks) {
-				b.setCoordinates(b.getX() + 1, b.getY());
-				grid.addBlock(b);
-				List<Integer> coords = new ArrayList<Integer>(2);
-				coords.add(b.getX());
-				coords.add(b.getY());
-				toUpdate.add(coords);
-			}
-			notifyGUI(toUpdate);
+			reposition(newBlockCoords);
 		}
 	}
 	
@@ -262,11 +321,11 @@ public abstract class Tetromino {
 	}
 	
 	/**
-	 * Retorna los un arreglo con los cuatro bloques de este tetromino.
+	 * Retorna los un arreglo con los cuatro bloques de este tetromino, el centroide se encuantra en la posicion 0.
 	 * @return Un arreglo con los cuatro bloques de este tetromino.
 	 */
 	public Block[] getBlocks() {
-		Block[] allBlocks = {blocks[0], blocks[1], blocks[2], centroid};
+		Block[] allBlocks = {centroid, blocks[0], blocks[1], blocks[2]};
 		return allBlocks;
 	}
 	
