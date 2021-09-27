@@ -273,7 +273,6 @@ public class GUI extends JFrame{
 		lblInfoTime.setForeground(new java.awt.Color(0,0,43));
 		lblInfoTime.setFont(new Font("SansSerif", Font.BOLD, 22));
 		lblInfoTime.setBounds(25, 400, 100, 50);
-		lblInfoTime.setText(String.valueOf(juego.getElapsedTime()));
 		getContentPane().add(lblInfoTime);
 		
 		lblScore = new JLabel("SCORE");
@@ -288,7 +287,6 @@ public class GUI extends JFrame{
 		lblInfoScore.setForeground(new java.awt.Color(0,0,43));
 		lblInfoScore.setFont(new Font("SansSerif", Font.BOLD, 22));
 		lblInfoScore.setBounds(25, 525, 100, 50);
-		lblInfoScore.setText(String.valueOf(juego.getPoints()));
 		getContentPane().add(lblInfoScore);
 		
 	}
