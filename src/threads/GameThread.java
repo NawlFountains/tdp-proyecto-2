@@ -23,12 +23,10 @@ public class GameThread extends Thread {
 	@Override
 	public void run() {
 		while(!game.lost()) {
-			// TODO run game
-			System.out.println("Execute game");
+			//game.run(); TODO
 			try {
-				Thread.sleep(100);
+				Thread.sleep(game.getPauseBetweenRun());
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
