@@ -45,7 +45,7 @@ public class Grid {
 		
 		Block[] finalBlocks = fallingTetromino.getBlocks(); //Si o si son 4 bloques ya q se trata de un tetromino
 		
-		for (int i = 0; i <= 5; i++) { //Buscamos la menor y mayor fila donde hay bloques del tetromnio cayendo
+		for (int i = 0; i < 4; i++) { //Buscamos la menor y mayor fila donde hay bloques del tetromnio cayendo
 			if (finalBlocks[i].getY() > maxRow) {
 				maxRow=finalBlocks[i].getY();
 			} else if (finalBlocks[i].getY() < minRow) {
@@ -53,10 +53,11 @@ public class Grid {
 			}
 		}
 		
-		for (int i = minRow; i <= maxRow; i++) { //Vemos si entre las filas donde estaba el tetromino se completaron
-			if (checkLine(i)) {
+		for (int y = minRow; y <= maxRow; y++) { //Vemos si entre las filas donde estaba el tetromino se completaron
+			if ( checkLine(y) ) {
 				completedLines++;
-				removeLine(i); //remover la linea si esta completa
+				System.out.println("Fila " + y + " completedLines = " + completedLines);
+				removeLine(y); //remover la linea si esta completa
 			}
 		}
 		
@@ -76,7 +77,7 @@ public class Grid {
 	 * Remueve todos los elementos de la linea pasada por parametro
 	 * @param linea a remover
 	 */
-	private void removeLine(int line) { // TODO: necesito avisarle a los bloques que se vayan de la grilla o basta con quitar su referencia?
+	private void removeLine(int line) {
 		for (int x = 0; x < COLUMNS; x++) {
 			removeBlock(x, line);
 		}
@@ -123,6 +124,7 @@ public class Grid {
 	public void addTetromino() {
 		fallingTetromino = nextTetromino;
 		nextTetromino = randomTetromino();
+		game.getGUI().updateNextTetr();
 	}
 	
 	/**
@@ -145,6 +147,7 @@ public class Grid {
 				}
 			}
 		}
+		game.getGUI().updateGrid();
 	}
 	
 	/**
