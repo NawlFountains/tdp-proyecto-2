@@ -21,9 +21,9 @@ class GridTest {
 	private Tetromino tetro1 = new Tetromino_I(Color.BLUE);
 	Block[] blocks = tetro1.getBlocks();
 	Block block1 = blocks[0];
-	Block block2 = blocks[0];
-	Block block3 = blocks[0];
-	Block block4 = blocks[0];
+	Block block2 = blocks[1];
+	Block block3 = blocks[2];
+	Block block4 = blocks[3];
 
 	@BeforeEach
 	public void beforeEach() {
@@ -110,6 +110,7 @@ class GridTest {
 				y++;
 			}
 		}
+		printGrid();
 		assertEquals(800, grid.deleteLines());		// borrar 4 filas
 		
 		/***************************************************************************************************************************************************/
