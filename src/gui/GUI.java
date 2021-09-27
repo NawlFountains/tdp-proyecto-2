@@ -11,6 +11,7 @@ import exceptions.TetrominoException;
 import game.Game;
 import game.Grid;
 import game.tetrominos.Block;
+import game.tetrominos.Color;
 import game.tetrominos.Tetromino;
 
 import javax.swing.ImageIcon;
@@ -45,10 +46,10 @@ public class GUI extends JFrame{
 	public GUI(Game juego) {
 		this.juego = juego;
 		initialize();
-		//updateElapsedTime();
-		//updatePoints();
+		updateElapsedTime();
+		updatePoints();
 		updateNextTetr();
-		//updateGrid();
+		updateGrid();
 	}
 	
 	/**
@@ -178,12 +179,12 @@ public class GUI extends JFrame{
 		
 		int size=shape.length;
 		//si quieren ver la pantalla de "Design" comenten las dos lineas siguientes TODO
-		panelTetro.setLayout(new GridLayout(size, size, 0, 0));
-		panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
+		panelTetro.setLayout(new GridLayout(4, 4, 0, 0));
+		panelTetro.setBounds(0, 0, 100, 100);
 		
-		for(int y = size - 1; y >= 0; y--){
-			for(int x = 0; x < size; x++){
-				if(shape[x][y] != Tetromino.EMPTY) {
+		for(int y = 3; y >= 0; y--){
+			for(int x = 0; x < 4; x++){
+				if(x<size && y<shape[0].length && shape[x][y] != Tetromino.EMPTY) {
 					nextTet[x][y].setColor(blocks[x].getColor());
 				}
 				else {
