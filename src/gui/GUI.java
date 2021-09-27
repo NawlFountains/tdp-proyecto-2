@@ -7,12 +7,15 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
+import exceptions.TetrominoException;
 import game.Game;
 import game.tetrominos.Block;
 import game.tetrominos.Tetromino;
 
 import javax.swing.ImageIcon;
 import java.awt.GridLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame{
@@ -24,7 +27,7 @@ public class GUI extends JFrame{
 	private JLabel lblNext;
 	private JLabel lblInfoTime;
 	private JLabel background_1;
-	protected Cell[][] cells;
+	protected Cell[][] cells = new Cell[10][21];
 	protected Cell[][] nextTet;
 	protected ImageIcon miniTetro;
 	
@@ -59,6 +62,53 @@ public class GUI extends JFrame{
 		infoTetro();
 		infoStats();
 		background();
+		controles();
+	}
+	
+	private void controles() {
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int a=e.getKeyCode();
+				System.out.println(a); //TODO
+				lblInfoTime.setText(""+a); //TODO
+				
+				try {
+					switch (a) {
+					case KeyEvent.VK_LEFT:
+						
+						System.out.println("left"); //TODO
+						game.getGrid().getFallingTetr().moveLeft(); 
+						break;
+					case KeyEvent.VK_RIGHT:
+
+						System.out.println("right"); //TODO
+						game.getGrid().getFallingTetr().moveRight(); 
+						break;
+					case KeyEvent.VK_DOWN:
+
+						System.out.println("down"); //TODO
+						game.getGrid().getFallingTetr().fall(); 
+						break;
+					case KeyEvent.VK_Z:
+
+						System.out.println("rotateLev"); //TODO
+						game.getGrid().getFallingTetr().rotateLev();
+						break;
+					case KeyEvent.VK_X:
+
+						System.out.println("rotateDext"); //TODO
+						game.getGrid().getFallingTetr().rotateDext();;
+						break;
+						
+					}
+				}catch(TetrominoException ex) {
+					ex.printStackTrace();
+				}
+				
+				
+			}
+		});
 	}
 	
 	/**
@@ -68,7 +118,7 @@ public class GUI extends JFrame{
 		
 	}
 	
-	public void updateCell() {
+	public void updateCell(int x, int y) {
 		
 	}
 
@@ -92,16 +142,15 @@ public class GUI extends JFrame{
 		Block[] blocks = game.getGrid().getNextTetr().getBlocks();
 		
 		int size=shape.length;
-		//si quieren ver la pantalla de "Desing" comenten las dos lineas siguientes
+		//si quieren ver la pantalla de "Design" comenten las dos lineas siguientes TODO
 		panelTetro.setLayout(new GridLayout(size, size, 0, 0));
 		panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
-		//comenten hasta este punto
 		
 		
 		for(int i = 0; i < size; i++) {
 			for(int j = 0; j < size; j++) {
 				bloqueTetromino=new Cell();
-				if(shape[i][j] == Tetromino.BLOCK || shape[i][j] == Tetromino.CENTROID) {
+				if(shape[i][j] != Tetromino.EMPTY) {
 					bloqueTetromino.setColor(blocks[i].getColor());
 				}
 				nextTet[i][j] = bloqueTetromino;
