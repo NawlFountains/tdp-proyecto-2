@@ -31,7 +31,7 @@ public class Cell extends JLabel {
 	/**
 	 * Crea una nueva celda con el color pasado como parametro.
 	 * @param c El color de la nueva celda.
-	 */
+	 */@Deprecated
 	public Cell(Color c) {
 		this();
 		setColor(c);
