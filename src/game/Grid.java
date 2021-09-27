@@ -39,7 +39,7 @@ public class Grid {
 	 * Elimina lineas de bloques , llama a fall() y retorna 100,200,500 u 800, si se elimina 1, 2 ,3 o 4 lineas respectivamente.
 	 * @return Un entero positivo, representando los puntos obtenidos por lineas eliminadas.
 	 */
-	public int deleteLines() {
+	public void deleteLines() {
 		int completedLines = 0;
 		int points = 0;
 		int minRow = ROWS;
@@ -75,7 +75,9 @@ public class Grid {
 			case 4:	points = 800;	break;
 			default: points = 0;
 		}
-		return points;
+		
+		game.addPoints(points);
+		game.getGUI().updatePoints();
 	}
 	
 	/**
