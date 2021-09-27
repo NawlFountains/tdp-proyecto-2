@@ -49,7 +49,6 @@ public class GUI extends JFrame{
 		updatePoints();
 		updateNextTetr();
 		updateGrid();
-		cells[2][2].setColor(game.tetrominos.Color.BLUE);
 	}
 	
 	/**
@@ -75,7 +74,6 @@ public class GUI extends JFrame{
 			public void keyPressed(KeyEvent e) {
 				int a=e.getKeyCode();
 				System.out.println(a); //TODO
-				lblInfoTime.setText(""+a); //TODO
 				
 				try {
 					switch (a) {
