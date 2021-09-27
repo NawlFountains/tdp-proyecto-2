@@ -178,8 +178,8 @@ public class GUI extends JFrame{
 		
 		int size=shape.length;
 		//si quieren ver la pantalla de "Design" comenten las dos lineas siguientes TODO
-		panelTetro.setLayout(new GridLayout(size, size, 0, 0));
-		panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
+		//panelTetro.setLayout(new GridLayout(size, size, 0, 0));
+		//panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
 		
 		for(int y = size - 1; y >= 0; y--){
 			for(int x = 0; x < size; x++){
@@ -273,6 +273,7 @@ public class GUI extends JFrame{
 		lblInfoTime.setForeground(new java.awt.Color(0,0,43));
 		lblInfoTime.setFont(new Font("SansSerif", Font.BOLD, 22));
 		lblInfoTime.setBounds(25, 400, 100, 50);
+		lblInfoTime.setText(String.valueOf(juego.getElapsedTime()));
 		getContentPane().add(lblInfoTime);
 		
 		lblScore = new JLabel("SCORE");
@@ -287,6 +288,7 @@ public class GUI extends JFrame{
 		lblInfoScore.setForeground(new java.awt.Color(0,0,43));
 		lblInfoScore.setFont(new Font("SansSerif", Font.BOLD, 22));
 		lblInfoScore.setBounds(25, 525, 100, 50);
+		lblInfoScore.setText(String.valueOf(juego.getPoints()));
 		getContentPane().add(lblInfoScore);
 		
 	}
