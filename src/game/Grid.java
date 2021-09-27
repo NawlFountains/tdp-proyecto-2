@@ -24,7 +24,7 @@ public class Grid {
 	//Metodos
 	
 	/**
-	 * Crea una nueva grilla, inicializando su matriz de bloques.
+	 * Crea una nueva grilla, inicializando su matriz de bloques y preparando tetrominos para empezar el juego.
 	 */
 	public Grid(Game game) {
 		this.game = game;
@@ -39,7 +39,7 @@ public class Grid {
 	 * Elimina lineas de bloques , llama a fall() y retorna 100,200,500 u 800, si se elimina 1, 2 ,3 o 4 lineas respectivamente.
 	 * @return Un entero positivo, representando los puntos obtenidos por lineas eliminadas.
 	 */
-	public int deleteLines() { //TODO: verificar correctitud
+	public int deleteLines() {
 		int completedLines = 0;
 		int points = 0;
 		int minRow = ROWS;
@@ -83,7 +83,7 @@ public class Grid {
 	 * @param linea a remover
 	 */
 	private void removeLine(int line) {
-		for (int x = 0; x < COLUMNS; x++) {
+		for (int x = 0; x < COLUMNS; x++) { //Recorremos la linea eliminando todos los elementos
 			try {
 				removeBlock(x, line);
 			} catch (GridException e) {
@@ -94,7 +94,7 @@ public class Grid {
 	
 	/**
 	 * Consulta si la linea pasada por parametro esta vacia
-	 * @param linea a consultar
+	 * @param line linea a consultar
 	 * @return true si esta vacia, false sino
 	 */
 	private boolean isEmptyLine(int line) {
@@ -112,7 +112,7 @@ public class Grid {
 	
 	/**
 	 * Busca la proxima linea no vacia partiendo de la pasada por parametro
-	 * @param linea desde donde buscar 
+	 * @param line linea desde donde buscar 
 	 * @return entero linea encontrada que no es vacia, -1 si no encontro.
 	 */
 	private int searchNextNonEmptyLine(int line) {
@@ -128,16 +128,17 @@ public class Grid {
 	}
 	
 	/**
-	 * Agrega el siguiente tetromino a la grilla y crea un tetromino que queda en espera.
+	 * Agrega el siguiente tetromino a la grilla, crea un tetromino que queda en espera y le avisa a la GUI que el siguiente tetromino cambio.
 	 */
 	public void addTetromino() {
 		fallingTetromino = nextTetromino;
-		nextTetromino = randomTetromino();
+		setNextTetromino(randomTetromino());
 		game.getGUI().updateNextTetr();
 	}
 	
 	/**
-	 * Actualiza esta grilla despues de la eliminacion de una o mas filas, haciendo caer todos los bloques que se encuentren por encima de estas.
+	 * Actualiza esta grilla despues de la eliminacion de una o mas filas, bajando de posicion los bloques que se encuentren por encima,
+	 *  agrega un tetromino listo para caer y avisa a la GUI el cambio.
 	 */
 	protected void fall() {
 		for (int y = 0; y < ROWS; y++ ) {

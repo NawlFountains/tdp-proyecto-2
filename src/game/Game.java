@@ -37,7 +37,7 @@ public class Game {
 			if(grid.getFallingTetr().isFalling())
 				grid.getFallingTetr().fall();
 			else
-				grid.deleteLines();
+				addPoints(grid.deleteLines());
 		} catch (TetrominoException e) {
 			e.printStackTrace();
 		}
