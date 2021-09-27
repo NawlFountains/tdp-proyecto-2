@@ -132,6 +132,7 @@ public class Grid {
 	 */
 	public void addTetromino() {
 		fallingTetromino = nextTetromino;
+		fallingTetromino.setGrid(this); //Asigno la grilla al tetromino para que pueda empezar a caer
 		setNextTetromino(randomTetromino());
 		game.getGUI().updateNextTetr();
 	}
