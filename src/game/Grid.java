@@ -159,6 +159,7 @@ public class Grid {
 				}
 			}
 		}
+		addTetromino();
 		game.getGUI().updateGrid();
 	}
 	
