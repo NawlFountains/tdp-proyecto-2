@@ -279,6 +279,39 @@ class GridTest {
 
 		/***************************************************************************************************************************************************/
 		
+		tetro = buildTetro();
+		
+		grid = new GridForTesting(new Game());
+		blocks.clear();
+		for(int i = 0; i < 5; i++) {
+			Tetromino t = new Tetromino_I(Color.BLUE);
+			for(Block b : t.getBlocks()) {
+				blocks.add(b);
+			}
+		}
+		x = 0;
+		y = 2;
+		for(int i = 0; i < blocks.size(); i++) {
+			blocks.get(i).setCoordinates(x, y);
+			grid.addBlock(blocks.get(i));
+			if(++x >= Grid.COLUMNS - 1) {
+				x = 0;
+				y++;
+			}
+		}
+		
+		grid.setNextTetromino(tetro);
+		grid.addTetromino();
+		for(Block b : tetro.getBlocks()) {
+			grid.addBlock(b);
+		}
+		
+		System.out.println("Before delete 2 in middle");
+		printGrid();
+		assertEquals(200, grid.deleteLines());					// borrar 2 filas en el medio
+		System.out.println("After delete 2 in middle");
+		printGrid();
+		
 	}
 
 }
