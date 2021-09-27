@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import exceptions.GridException;
 import game.Game;
 import game.Grid;
 import game.tetrominos.Block;
@@ -51,25 +52,33 @@ class GridTest {
 		System.out.println("testGet()");
 		add();
 		printGrid();
-		assertEquals(block1, grid.getBlock(0, 0));
-		assertEquals(block2, grid.getBlock(5, 3));
-		assertEquals(block3, grid.getBlock(9, 20));
-		assertEquals(block4, grid.getBlock(7, 14));
-		assertNull(grid.getBlock(1, 1));
+		try {
+			assertEquals(block1, grid.getBlock(0, 0));
+			assertEquals(block2, grid.getBlock(5, 3));
+			assertEquals(block3, grid.getBlock(9, 20));
+			assertEquals(block4, grid.getBlock(7, 14));
+			assertNull(grid.getBlock(1, 1));
+		} catch (GridException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
 	public void testRemove() {
 		System.out.println("testRemove()");
 		add();
-		grid.removeBlock(0, 0);
-		grid.removeBlock(5, 3);
-		grid.removeBlock(9, 20);
-		grid.removeBlock(7, 14);
-		assertNull(grid.getBlock(0, 0));
-		assertNull(grid.getBlock(5, 3));
-		assertNull(grid.getBlock(9, 20));
-		assertNull(grid.getBlock(7, 14));
+		try {
+			grid.removeBlock(0, 0);
+			grid.removeBlock(5, 3);
+			grid.removeBlock(9, 20);
+			grid.removeBlock(7, 14);
+			assertNull(grid.getBlock(0, 0));
+			assertNull(grid.getBlock(5, 3));
+			assertNull(grid.getBlock(9, 20));
+			assertNull(grid.getBlock(7, 14));
+		} catch (GridException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void printGrid() {
@@ -77,7 +86,11 @@ class GridTest {
 		int y;
 		for(y = Grid.ROWS - 1; y >= 0; y--) {
 			for(x = 0; x < Grid.COLUMNS; x++) {
-				System.out.print( (grid.getBlock(x, y) != null ? 1 : 0) + " ");
+				try {
+					System.out.print( (grid.getBlock(x, y) != null ? 1 : 0) + " ");
+				} catch (GridException e) {
+					e.printStackTrace();
+				}
 			}
 			System.out.println();
 		}

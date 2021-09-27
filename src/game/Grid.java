@@ -2,6 +2,7 @@ package game;
 
 import java.util.Random;
 
+import exceptions.GridException;
 import game.tetrominos.*;
 
 /**
@@ -37,7 +38,7 @@ public class Grid {
 	 * Elimina lineas de bloques , llama a fall() y retorna 100,200,500 u 800, si se elimina 1, 2 ,3 o 4 lineas respectivamente.
 	 * @return Un entero positivo, representando los puntos obtenidos por lineas eliminadas.
 	 */
-	public int deleteLines() { 
+	public int deleteLines() { //TODO: verificar correctitud
 		int completedLines = 0;
 		int points = 0;
 		int minRow = ROWS;
@@ -46,18 +47,21 @@ public class Grid {
 		Block[] finalBlocks = fallingTetromino.getBlocks(); //Si o si son 4 bloques ya q se trata de un tetromino
 		
 		for (int i = 0; i < 4; i++) { //Buscamos la menor y mayor fila donde hay bloques del tetromnio cayendo
-			if (finalBlocks[i].getY() > maxRow) {
-				maxRow=finalBlocks[i].getY();
-			} else if (finalBlocks[i].getY() < minRow) {
+			if ( finalBlocks[i].getY() > maxRow ) {
+				maxRow = finalBlocks[i].getY();
+			} else if ( finalBlocks[i].getY() < minRow ) {
 				minRow = finalBlocks[i].getY();
 			}
 		}
 		
 		for (int y = minRow; y <= maxRow; y++) { //Vemos si entre las filas donde estaba el tetromino se completaron
-			if ( checkLine(y) ) {
-				completedLines++;
-				System.out.println("Fila " + y + " completedLines = " + completedLines);
-				removeLine(y); //remover la linea si esta completa
+			try {
+				if ( checkLine(y) ) {
+					completedLines++;
+					removeLine(y); //remover la linea si esta completa
+				}
+			} catch ( GridException e ) {
+				e.printStackTrace();
 			}
 		}
 		
@@ -79,7 +83,11 @@ public class Grid {
 	 */
 	private void removeLine(int line) {
 		for (int x = 0; x < COLUMNS; x++) {
-			removeBlock(x, line);
+			try {
+				removeBlock(x, line);
+			} catch (GridException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -132,16 +140,20 @@ public class Grid {
 	 */
 	protected void fall() {
 		for (int y = 0; y < ROWS; y++ ) {
-			if (isEmptyLine(y)) { 
+			if ( isEmptyLine(y) ) { 
 				int nxtNonEmptyLine = searchNextNonEmptyLine(y);
-				if (nxtNonEmptyLine == -1){ //NO encontro linea siguiente no vacia
+				if ( nxtNonEmptyLine == -1 ){ //NO encontro linea siguiente no vacia
 					y = ROWS;
 				} else {
 					for (int x = 0; x < COLUMNS; x++ ) {
-						if (blockMatrix[x][nxtNonEmptyLine]!=null) {
+						if ( blockMatrix[x][nxtNonEmptyLine]!=null ) {
 							blockMatrix[x][nxtNonEmptyLine].setCoordinates(x, y); //Cambio coordenadas de bloque a fila vacia
 							addBlock(blockMatrix[x][nxtNonEmptyLine]); //Grilla agrega bloque 
-							removeBlock(x, nxtNonEmptyLine); //Grilla borra el bloque relocado.
+							try { 
+								removeBlock(x, nxtNonEmptyLine); //Grilla borra el bloque relocado.
+							} catch (GridException e) {
+								System.out.println(e.getMessage());
+							} 
 						}
 					}
 				}
@@ -152,10 +164,10 @@ public class Grid {
 	
 	/**
 	 * Asigna un tetromino a ser el proximo tetromino.
-	 * @param Tetromino t a ser siguiente tetromino.
+	 * @param t Tetromino a ser siguiente tetromino.
 	 */
 	protected void setNextTetromino(Tetromino t) {
-		if (t != null) {
+		if ( t != null ) {
 			nextTetromino = t;
 		}
 	} 
@@ -168,7 +180,7 @@ public class Grid {
 		Tetromino toReturn = null;
 		Random rnd = new Random();		
 		int tirada = rnd.nextInt(6); //Retorna un numero entre [0,7), no se incluye el 7.
-		switch (tirada) {
+		switch ( tirada ) {
 			case 0: toReturn = new Tetromino_I(Color.CYAN);		break;
 			case 1: toReturn = new Tetromino_J(Color.BLUE);		break;
 			case 2: toReturn = new Tetromino_L(Color.ORANGE);	break;
@@ -182,14 +194,15 @@ public class Grid {
 	
 	/**
 	 * Chequea si la linea esta completa.
-	 * @param Numero de fila a chequear.
+	 * @param row Numero de fila a chequear.
 	 * @return True si la linea esta llena, false si no.
+	 * @throws GridException si la fila no pertence a la grilla.
 	 */
-	public boolean checkLine(int row) {
+	public boolean checkLine(int row) throws GridException {
 		boolean full = true; //Asumimos que esta llena y probamos si no lo esta.
 		int pointer = 0;
-		if(row < 0 || row >= ROWS) { //	TODO: 	excepcion fila invalida
-			full = false; //Si la fila no pertence a la grilla declaramos full en false asi no se mete al while.
+		if( row < 0 || row >= ROWS ) {
+			throw new GridException("Fila no pertence a la grilla");
 		}
 		while (full && pointer < COLUMNS) {
 			if (blockMatrix[pointer][row] == null)
@@ -218,26 +231,34 @@ public class Grid {
 	
 	/**
 	 * Consulta el bloque en las coordenadas pasadas como parametro.
-	 * @param Coordenada x.
-	 * @param Coordenada y.
+	 * @param x Coordenada x.
+	 * @param y Coordenada y.
 	 * @return El bloque que se encuentra en las coordenadas pasadas como parametro, null si dicho bloque no existe.
+	 * @throws GridException si las coordenadas no pertenecen a la grilla
 	 */
-	public Block getBlock(int x, int y) {
+	public Block getBlock(int x, int y) throws GridException {
+		if ( x < 0  || x > COLUMNS || y < 0 || y > ROWS ) {
+			throw new GridException("Coordenadas fuera de los limites de la grilla");
+		}
 		return blockMatrix[x][y];  //Se conoce que puede ser null, la reponsabilidad es del cliente
 	}
 	
 	/**
 	 * Remueve el bloque en las coordenadas pasadas como parametro.
-	 * @param Coordenada x.
-	 * @param Coordenada y.
+	 * @param x Coordenada x.
+	 * @param y Coordenada y.
+	 * @throws GridException si las coordenadas no pertenecen a la grilla
 	 */
-	public void removeBlock(int x, int y) {
+	public void removeBlock(int x, int y) throws GridException{
+		if ( x < 0  || x > COLUMNS || y < 0 || y > ROWS ) {
+			throw new GridException("Coordenadas fuera de los limites de la grilla");
+		}
 		blockMatrix[x][y] = null;
 	}
 	
 	/**
 	 * Agrega un bloque a la grilla.
-	 * @param Bloque a añadir.
+	 * @param b Bloque a añadir.
 	 */
 	public void addBlock(Block b) { //El responsable de llamar a este metodo se asegura que la posicion es valida, no colisiona, y no es nula.
 		blockMatrix[b.getX()][b.getY()] = b;
@@ -245,7 +266,7 @@ public class Grid {
 	
 	/**
 	 * Retorna el juego asociado a esta grilla.
-	 * @return El juego asociado a esta grilla.
+	 * @return game Juego asociado a esta grilla.
 	 */
 	public Game getGame() {
 		return game;
