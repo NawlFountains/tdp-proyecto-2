@@ -1,9 +1,6 @@
 package gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -16,17 +13,8 @@ import game.tetrominos.Tetromino;
 
 import javax.swing.ImageIcon;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.CardLayout;
 
+@SuppressWarnings("serial")
 public class GUI extends JFrame{
 	
 	private JPanel panel;
@@ -97,23 +85,23 @@ public class GUI extends JFrame{
 	 */
 	public void updateNextTetr() {
 		
+		int[][] shape=game.getGrid().getNextTetr().getShape();
 		
-		int[][] s=game.getGrid().getNextTetr().getShape();
 		Cell bloqueTetromino;
 		
 		Block[] blocks = game.getGrid().getNextTetr().getBlocks();
 		
-		
+		int size=shape.length;
 		//si quieren ver la pantalla de "Desing" comenten las dos lineas siguientes
-		panelTetro.setLayout(new GridLayout(s.length, s.length, 0, 0));
-		panelTetro.setBounds(25 * (4 - s.length) / 2, 25 * (4 - s.length) / 2, s.length*25, s.length*25);
-		// comenten hasta este punto
+		panelTetro.setLayout(new GridLayout(size, size, 0, 0));
+		panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
+		//comenten hasta este punto
 		
 		
-		for(int i = 0; i < s.length; i++) {
-			for(int j = 0; j < s.length; j++) {
+		for(int i = 0; i < size; i++) {
+			for(int j = 0; j < size; j++) {
 				bloqueTetromino=new Cell();
-				if(s[i][j] == Tetromino.BLOCK || s[i][j] == Tetromino.CENTROID) {
+				if(shape[i][j] == Tetromino.BLOCK || shape[i][j] == Tetromino.CENTROID) {
 					bloqueTetromino.setColor(blocks[i].getColor());
 				}
 				nextTet[i][j] = bloqueTetromino;
