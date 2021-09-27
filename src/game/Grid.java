@@ -183,7 +183,7 @@ public class Grid {
 	protected Tetromino randomTetromino() {
 		Tetromino toReturn = null;
 		Random rnd = new Random();		
-		int tirada = rnd.nextInt(6); //Retorna un numero entre [0,7), no se incluye el 7.
+		int tirada = rnd.nextInt(7); //Retorna un numero entre [0,7), no se incluye el 7.
 		switch ( tirada ) {
 			case 0: toReturn = new Tetromino_I(Color.CYAN);		break;
 			case 1: toReturn = new Tetromino_J(Color.BLUE);		break;
