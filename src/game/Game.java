@@ -5,7 +5,6 @@ import gui.GUI;
 
 /**
  * Modela el juego.
- * @author Islas Agustin
  */
 
 public class Game {
@@ -97,7 +96,7 @@ public class Game {
 	 * @return la cantidad de milisegundos entre ejecución, calculada con el tiempo transcurrido actual.
 	 */
 	public int getPauseBetweenRun() {
-		if(elapsedTime < 700)
+		if(elapsedTime < 900)
 			return 1000 - elapsedTime;
 		else 
 			return 100;
@@ -109,5 +108,4 @@ public class Game {
 	public void addSecond() {
 		elapsedTime++;
 	}
-	
 }
