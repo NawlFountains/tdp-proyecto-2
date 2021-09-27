@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import exceptions.GridException;
 import exceptions.TetrominoException;
 import game.Grid;
 
@@ -127,7 +128,11 @@ public abstract class Tetromino {
 		Block[] blocks = new Block[coords.size()];
 		for(int i = 0; i < coords.size(); i++) {
 			pair = coords.get(i);
-			blocks[i] = grid.getBlock(pair[0], pair[1]);
+			try {
+				blocks[i] = grid.getBlock(pair[0], pair[1]);
+			} catch(GridException e) {
+				e.printStackTrace(); // TODO printstacktrace
+			}
 		}
 		return blocks;
 	}
@@ -158,7 +163,11 @@ public abstract class Tetromino {
 		Set<List<Integer>> toUpdate = new HashSet<List<Integer>>(8);
 		// Remueve bloques
 		for(Block block : blocks) {
-			grid.removeBlock(block.getX(), block.getY());
+			try {
+				grid.removeBlock(block.getX(), block.getY());
+			} catch(GridException e) {
+				e.printStackTrace(); // TODO printstacktrace
+			}
 			toUpdate.add(Arrays.asList(new Integer[] {block.getX(), block.getY()}));
 		}
 		// Añade bloques
@@ -199,7 +208,11 @@ public abstract class Tetromino {
 		boolean collides = false;
 		for(int i = 0; i < tetrBlocks.length; i++) {
 			if(tetrBlocks[i].getY() - 1 >= 0)
-				collisionBlocks[i] = grid.getBlock(tetrBlocks[i].getX(), tetrBlocks[i].getY() - 1);
+				try {
+					collisionBlocks[i] = grid.getBlock(tetrBlocks[i].getX(), tetrBlocks[i].getY() - 1);
+				} catch(GridException e) {
+					e.printStackTrace(); // TODO printstacktrace
+				}
 			else
 				collides = true;
 		}
@@ -217,7 +230,11 @@ public abstract class Tetromino {
 		boolean collides = false;
 		for(int i = 0; i < tetrBlocks.length; i++) {
 			if(tetrBlocks[i].getX() - 1 >= 0)
-				collisionBlocks[i] = grid.getBlock(tetrBlocks[i].getX() - 1, tetrBlocks[i].getY());
+				try {
+					collisionBlocks[i] = grid.getBlock(tetrBlocks[i].getX() - 1, tetrBlocks[i].getY());
+				} catch(GridException e) {
+					e.printStackTrace(); // TODO printstacktrace
+				}
 			else
 				collides = true;
 		}
@@ -235,7 +252,11 @@ public abstract class Tetromino {
 		boolean collides = false;
 		for(int i = 0; i < tetrBlocks.length; i++) {
 			if(tetrBlocks[i].getX() + 1 <= Grid.COLUMNS)
-				collisionBlocks[i] = grid.getBlock(tetrBlocks[i].getX() + 1, tetrBlocks[i].getY());
+				try {
+					collisionBlocks[i] = grid.getBlock(tetrBlocks[i].getX() + 1, tetrBlocks[i].getY());
+				} catch(GridException e) {
+					e.printStackTrace(); // TODO printstacktrace
+				}
 			else
 				collides = true;
 		}
