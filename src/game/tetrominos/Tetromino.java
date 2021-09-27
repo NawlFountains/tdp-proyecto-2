@@ -40,7 +40,22 @@ public abstract class Tetromino {
 	}
 
 	public void setGrid(Grid grid) {
-		this.grid = grid; //TODO set coordinates
+		this.grid = grid;
+		
+		int[] centroidCoordsInShape = getCentroidPosInShape(shape);
+		centroid.setCoordinates(Grid.COLUMNS / 2, Grid.ROWS - 1 - (shape.length - 1 - centroidCoordsInShape[1]));
+		
+		int i = 0;
+		for(int x = 0; x < shape.length && i < 3; x++)
+			for(int y = 0; y < shape[0].length && i < 3; y++)
+				if(shape[x][y] == BLOCK) {
+					int blockX = centroid.getX() - centroidCoordsInShape[0] + x;
+					int blockY = centroid.getY() - centroidCoordsInShape[1] + y;
+					blocks[i++].setCoordinates(blockX, blockY);
+				}
+		for(Block block : getBlocks()) {
+			grid.addBlock(block);
+		}
 	}
 	
 	/**
@@ -192,7 +207,7 @@ public abstract class Tetromino {
 		} else {
 			int[][] newBlockCoords = new int[tetrBlocks.length][];
 			for(int i = 0; i < tetrBlocks.length; i++) {
-				newBlockCoords[i] = new int[] {blocks[i].getX(), blocks[i].getY() - 1};
+				newBlockCoords[i] = new int[] {tetrBlocks[i].getX(), tetrBlocks[i].getY() - 1};
 			}
 			reposition(newBlockCoords);
 		}
@@ -305,7 +320,7 @@ public abstract class Tetromino {
 		if(!collidesLeft(tetrBlocks)) {
 			int[][] newBlockCoords = new int[tetrBlocks.length][];
 			for(int i = 0; i < tetrBlocks.length; i++) {
-				newBlockCoords[i] = new int[] {blocks[i].getX() - 1, blocks[i].getY()};
+				newBlockCoords[i] = new int[] {tetrBlocks[i].getX() - 1, tetrBlocks[i].getY()};
 			}
 			reposition(newBlockCoords);
 		}
@@ -322,7 +337,7 @@ public abstract class Tetromino {
 		if(!collidesRight(tetrBlocks)) {
 			int[][] newBlockCoords = new int[tetrBlocks.length][];
 			for(int i = 0; i < tetrBlocks.length; i++) {
-				newBlockCoords[i] = new int[] {blocks[i].getX() + 1, blocks[i].getY()};
+				newBlockCoords[i] = new int[] {tetrBlocks[i].getX() + 1, tetrBlocks[i].getY()};
 			}
 			reposition(newBlockCoords);
 		}
@@ -351,9 +366,9 @@ public abstract class Tetromino {
 	}
 	
 	public void notifyGUI(Set<List<Integer>> toUpdate) {
-//		for(List<Integer> coords : toUpdate) {
-//			grid.getGame().getGUI() TODO
-//		}
+		for(List<Integer> coords : toUpdate) {
+			grid.getGame().getGUI().updateCell(coords.get(0), coords.get(1));
+		}
 	}
 	
 	/**
