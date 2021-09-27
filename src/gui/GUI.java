@@ -45,10 +45,10 @@ public class GUI extends JFrame{
 	public GUI(Game juego) {
 		this.juego = juego;
 		initialize();
-		updateElapsedTime();
-		updatePoints();
+		//updateElapsedTime();
+		//updatePoints();
 		updateNextTetr();
-		updateGrid();
+		//updateGrid();
 	}
 	
 	/**
@@ -178,13 +178,16 @@ public class GUI extends JFrame{
 		
 		int size=shape.length;
 		//si quieren ver la pantalla de "Design" comenten las dos lineas siguientes TODO
-		//panelTetro.setLayout(new GridLayout(size, size, 0, 0));
-		//panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
+		panelTetro.setLayout(new GridLayout(size, size, 0, 0));
+		panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
 		
 		for(int y = size - 1; y >= 0; y--){
 			for(int x = 0; x < size; x++){
 				if(shape[x][y] != Tetromino.EMPTY) {
 					nextTet[x][y].setColor(blocks[x].getColor());
+				}
+				else {
+					nextTet[x][y].setColor(null);
 				}
 				panelTetro.add(nextTet[x][y]);
 			}
