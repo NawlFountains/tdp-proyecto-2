@@ -1,5 +1,6 @@
 package game;
 
+import exceptions.TetrominoException;
 import gui.GUI;
 
 /**
@@ -13,26 +14,35 @@ public class Game {
 	
 	protected Grid grid;
 	protected int points = 0;
-	protected int speed;
 	protected int elapsedTime = 0;
 	protected boolean lost;
-	protected int timeSinceRun = 0;
 
 	protected GUI gui;
-	
+
 	/**
 	 * Crea una nueva instancia del juego.
 	 */
 	public Game() {
 		grid = new Grid(this);
 		gui = new GUI(this);
-		this.speed = 0;
 		this.lost = false;
 	}
 	
-//	public void run() {
-//		
-//	} TODO
+	/**
+	 * Checkea si el tetromino actual de la grilla está cayendo.
+	 * Si está cayendo, lo hace caer nuevamente, 
+	 * caso contrario elimina las lineas completas si las hay y hace caer el proximo tetromino.
+	 */
+	public void run() {
+		try {
+			if(grid.getFallingTetr().isFalling())
+				grid.getFallingTetr().fall();
+			else
+				grid.deleteLines();
+		} catch (TetrominoException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Incrementa el puntaje actual en la cantidad pasada como parametro.
@@ -80,6 +90,24 @@ public class Game {
 	 */
 	public GUI getGUI() {
 		return gui;
+	}
+	
+	/**
+	 * 
+	 * @return la cantidad de milisegundos entre ejecución, calculada con el tiempo transcurrido actual.
+	 */
+	public int getPauseBetweenRun() {
+		if(elapsedTime < 700)
+			return 1000 - elapsedTime;
+		else 
+			return 100;
+	}
+	
+	/**
+	 * Añade un segundo al tiempo transcurrido.
+	 */
+	public void addSecond() {
+		elapsedTime++;
 	}
 	
 }

@@ -23,15 +23,12 @@ public class TimerThread extends Thread {
 	@Override
 	public void run() {
 		while(!game.lost()) {
-			// TODO increment timer
-			System.out.println("Increment timer");
+			game.addSecond();
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-	
 }

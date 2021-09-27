@@ -2,7 +2,6 @@ package gui;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -35,7 +34,7 @@ public class GUI extends JFrame{
 	
 	protected Cell[][] cells;
 	protected Cell[][] nextTet;
-	protected Game game;
+	protected Game juego;
 
 
 	/**
@@ -43,20 +42,21 @@ public class GUI extends JFrame{
 	 * @param game El juego asociado a esta GUI.
 	 */
 	
-	public GUI(Game game) {
-		this.game = game;
+	public GUI(Game juego) {
+		this.juego = juego;
 		initialize();
 		updateElapsedTime();
 		updatePoints();
 		updateNextTetr();
 		updateGrid();
+		cells[2][2].setColor(game.tetrominos.Color.BLUE);
 	}
 	
 	/**
 	 * Metodo encargado de inicializar la GUI.
 	 */
 	private void initialize() {
-		getContentPane().setBackground(new Color(30,30,30));
+		getContentPane().setBackground(new java.awt.Color(30,30,30));
 		setResizable(false);
 		setBounds(100, 100, 565, 663);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,27 +82,27 @@ public class GUI extends JFrame{
 					case KeyEvent.VK_LEFT:
 						
 						System.out.println("left"); //TODO
-						game.getGrid().getFallingTetr().moveLeft(); 
+						juego.getGrid().getFallingTetr().moveLeft(); 
 						break;
 					case KeyEvent.VK_RIGHT:
 
 						System.out.println("right"); //TODO
-						game.getGrid().getFallingTetr().moveRight(); 
+						juego.getGrid().getFallingTetr().moveRight(); 
 						break;
 					case KeyEvent.VK_DOWN:
 
 						System.out.println("down"); //TODO
-						game.getGrid().getFallingTetr().fall(); 
+						juego.getGrid().getFallingTetr().fall(); 
 						break;
 					case KeyEvent.VK_Z:
 
 						System.out.println("rotateLev"); //TODO
-						game.getGrid().getFallingTetr().rotateLev();
+						juego.getGrid().getFallingTetr().rotateLev();
 						break;
 					case KeyEvent.VK_X:
 
 						System.out.println("rotateDext"); //TODO
-						game.getGrid().getFallingTetr().rotateDext();
+						juego.getGrid().getFallingTetr().rotateDext();
 						break;
 						
 					}
@@ -124,12 +124,11 @@ public class GUI extends JFrame{
 			Block bloque;
 			for(int i = 0; i < cells.length; i++) {
 				for(int j = 0; j < cells[i].length; j++) {
-					bloque=game.getGrid().getBlock(i, j);
+					bloque=juego.getGrid().getBlock(i, j);
 					if(bloque!=null)
-						cells[i][j].setColor(game.getGrid().getBlock(i, j).getColor());
+						cells[i][j].setColor(juego.getGrid().getBlock(i, j).getColor());
 					else
 						cells[i][j].setColor(null);
-					panel.add(cells[i][j]);
 				}
 			}
 		}catch(GridException ex) {
@@ -143,15 +142,13 @@ public class GUI extends JFrame{
 	 * @param x la coordenada x de la celda
 	 * @param y la coordenada y de la celda
 	 */
-	
 	public void updateCell(int x, int y) {
 		try {
-			Block bloque=game.getGrid().getBlock(x, y);
+			Block bloque=juego.getGrid().getBlock(x, y);
 			if(bloque!=null)
-				cells[x][y].setColor(game.getGrid().getBlock(x, y).getColor());
+				cells[x][y].setColor(juego.getGrid().getBlock(x, y).getColor());
 			else
 				cells[x][y].setColor(null);
-			panel.add(cells[x][y]);
 		} catch (GridException ex) {
 			ex.printStackTrace();
 		}
@@ -162,14 +159,14 @@ public class GUI extends JFrame{
 	 * Actualiza el valor del label que informa los puntos
 	 */
 	public void updatePoints() {
-		lblInfoScore.setText("" + game.getPoints());
+		lblInfoScore.setText("" + juego.getPoints());
 	}
 	
 	/**
 	 * Actualiza el valor del label que informa el tiempo
 	 */
 	public void updateElapsedTime() {
-		lblInfoTime.setText("" + game.getElapsedTime());
+		lblInfoTime.setText("" + juego.getElapsedTime());
 	}
 	
 	/**
@@ -177,22 +174,21 @@ public class GUI extends JFrame{
 	 */
 	public void updateNextTetr() {
 		
-		int[][] shape=game.getGrid().getNextTetr().getShape();
+		int[][] shape=juego.getGrid().getNextTetr().getShape();
 		
-		Block[] blocks = game.getGrid().getNextTetr().getBlocks();
+		Block[] blocks = juego.getGrid().getNextTetr().getBlocks();
 		
 		int size=shape.length;
 		//si quieren ver la pantalla de "Design" comenten las dos lineas siguientes TODO
 		panelTetro.setLayout(new GridLayout(size, size, 0, 0));
 		panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
 		
-		
-		for(int i = 0; i < size; i++) {
-			for(int j = 0; j < size; j++) {
-				if(shape[i][j] != Tetromino.EMPTY) {
-					nextTet[i][j].setColor(blocks[i].getColor());
+		for(int y = size - 1; y >= 0; y--){
+			for(int x = 0; x < size; x++){
+				if(shape[x][y] != Tetromino.EMPTY) {
+					nextTet[x][y].setColor(blocks[x].getColor());
 				}
-				panelTetro.add(nextTet[i][j]);
+				panelTetro.add(nextTet[x][y]);
 			}
 		}
 	}
@@ -213,20 +209,20 @@ public class GUI extends JFrame{
 	 */
 	
 	private void crearPanelJuego() {
-		
-		cells = new Cell[Grid.COLUMNS][Grid.ROWS];
-		
-		for(int i = 0; i < cells.length; i++) {
-			for(int j = 0; j < cells[i].length; j++) {
-				cells[i][j] = new Cell();
-			}
-		}
-		
 		panel = new JPanel();
-		panel.setBackground(new Color(0,0,43));
+		panel.setBackground(new java.awt.Color(0,0,43));
 		panel.setBounds(150, 50, 250, 525);
 		panel.setLayout(new GridLayout(21, 10, 0, 0));
 		getContentPane().add(panel);
+		
+		cells = new Cell[Grid.COLUMNS][Grid.ROWS];
+		
+		for(int y = Grid.ROWS - 1; y >= 0; y--) {
+			for(int x = 0; x < Grid.COLUMNS; x++) {
+				cells[x][y] = new Cell();
+				panel.add(cells[x][y]);
+			}
+		}	
 	}
 	
 	/**
@@ -235,28 +231,29 @@ public class GUI extends JFrame{
 	
 	private void crearInfoTetro() {
 		nextTet = new Cell[4][4];
-		for(int i = 0; i < nextTet.length; i++) {
-			for(int j = 0; j < nextTet[i].length; j++) {
-				nextTet[i][j] = new Cell();
+		
+		for(int x = 0; x < nextTet.length; x++) {
+			for(int y = 0; y < nextTet[x].length; y++) {
+				nextTet[x][y] = new Cell();
 			}
 		}
 		
 		panel_1 = new JPanel();
 		panel_1.setBounds(425, 50, 100, 100);
 		panel_1.setLayout(null);
-		panel_1.setBackground(new Color(0,162,232));
+		panel_1.setBackground(new java.awt.Color(0,162,232));
 		getContentPane().add(panel_1);
 		
 		panelTetro = new JPanel();
 		panelTetro.setBounds(0, 0, 100, 100);
-		panelTetro.setBackground(new Color(0, 128, 128));
+		panelTetro.setBackground(new java.awt.Color(0, 128, 128));
 		panelTetro.setLayout(new GridLayout(4, 4, 0, 0));
 		panel_1.add(panelTetro);
 		
 		
 		lblNext = new JLabel("NEXT");
 		lblNext.setBounds(425, 175, 100, 25);
-		lblNext.setForeground(new Color(0,0,43));
+		lblNext.setForeground(new java.awt.Color(0,0,43));
 		lblNext.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNext.setFont(new Font("SansSerif", Font.BOLD, 20));
 		getContentPane().add(lblNext);
@@ -268,28 +265,28 @@ public class GUI extends JFrame{
 	private void crearInfoStats() {
 		lblTime = new JLabel("TIME");
 		lblTime.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTime.setForeground(new Color(0,0,43));
+		lblTime.setForeground(new java.awt.Color(0,0,43));
 		lblTime.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblTime.setBounds(25, 350, 100, 25);
 		getContentPane().add(lblTime);
 		
 		lblInfoTime = new JLabel("999999");
 		lblInfoTime.setHorizontalAlignment(SwingConstants.CENTER);
-		lblInfoTime.setForeground(new Color(0,0,43));
+		lblInfoTime.setForeground(new java.awt.Color(0,0,43));
 		lblInfoTime.setFont(new Font("SansSerif", Font.BOLD, 22));
 		lblInfoTime.setBounds(25, 400, 100, 50);
 		getContentPane().add(lblInfoTime);
 		
 		lblScore = new JLabel("SCORE");
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
-		lblScore.setForeground(new Color(0,0,43));
+		lblScore.setForeground(new java.awt.Color(0,0,43));
 		lblScore.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblScore.setBounds(25, 475, 100, 25);
 		getContentPane().add(lblScore);
 		
 		lblInfoScore = new JLabel("999999");
 		lblInfoScore.setHorizontalAlignment(SwingConstants.CENTER);
-		lblInfoScore.setForeground(new Color(0,0,43));
+		lblInfoScore.setForeground(new java.awt.Color(0,0,43));
 		lblInfoScore.setFont(new Font("SansSerif", Font.BOLD, 22));
 		lblInfoScore.setBounds(25, 525, 100, 50);
 		getContentPane().add(lblInfoScore);
