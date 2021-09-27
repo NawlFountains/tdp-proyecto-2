@@ -33,6 +33,7 @@ public class Cell extends JLabel {
 	 * @param c El color de la nueva celda.
 	 */
 	public Cell(Color c) {
+		this();
 		setColor(c);
 	}
  

@@ -16,6 +16,16 @@ import game.tetrominos.Tetromino;
 
 import javax.swing.ImageIcon;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.BorderLayout;
+import javax.swing.BoxLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.CardLayout;
 
 public class GUI extends JFrame{
 	
@@ -26,19 +36,19 @@ public class GUI extends JFrame{
 	private JLabel lblNext;
 	private JLabel lblInfoTime;
 	private JLabel background_1;
-	private JPanel panelTetro;
 	protected Cell[][] cells;
 	protected Cell[][] nextTet;
 	protected ImageIcon miniTetro;
 	
 	protected Game game;
+	private JPanel panel_1;
+	private JPanel panelTetro;
 
 	/**
 	 * Crea una nueva GUI y la asocia al juego pasado como parametro.
 	 * @param game El juego asociado a esta GUI.
 	 */
 	public GUI(Game game) {
-		nextTet = new Cell[4][4];
 		this.game = game;
 		
 		initialize();
@@ -48,9 +58,8 @@ public class GUI extends JFrame{
 	}
 	
 	/**
-	 * Metodo Encargado de inicializar la GUI
+	 * Metodo encargado de inicializar la GUI.
 	 */
-	
 	private void initialize() {
 		getContentPane().setBackground(new Color(30,30,30));
 		setResizable(false);
@@ -64,11 +73,9 @@ public class GUI extends JFrame{
 		background();
 	}
 	
-	
 	/**
 	 * Metodos de la GUI
 	 */
-	
 	public void updateGrid() {
 		
 	}
@@ -78,49 +85,41 @@ public class GUI extends JFrame{
 	}
 
 	public void updatePoints() {
-		lblInfoScore.setText(""+game.getPoints());
+		lblInfoScore.setText("" + game.getPoints());
 	}
 	
 	public void updateElapsedTime() {
-		lblInfoTime.setText(""+game.getElapsedTime());
+		lblInfoTime.setText("" + game.getElapsedTime());
 	}
 	
 	/**
 	 * Muetra el tetromino siguiente en el panelTetro
 	 */
-	public void updateNextTetr() { 
-		int x = 0; 
-		int y = 0;
+	public void updateNextTetr() {
+		
+		
+		int[][] s=game.getGrid().getNextTetr().getShape();
+		Cell bloqueTetromino;
+		
 		Block[] blocks = game.getGrid().getNextTetr().getBlocks();
 		
-		for(int i = 0; i < nextTet.length; i++) {
-			for(int j = 0; j < nextTet[i].length; j++) {
-				nextTet[i][j] = new Cell();
+		
+		//si quieren ver la pantalla de "Desing" comenten las dos lineas siguientes
+		panelTetro.setLayout(new GridLayout(s.length, s.length, 0, 0));
+		panelTetro.setBounds(25 * (4 - s.length) / 2, 25 * (4 - s.length) / 2, s.length*25, s.length*25);
+		// comenten hasta este punto
+		
+		
+		for(int i = 0; i < s.length; i++) {
+			for(int j = 0; j < s.length; j++) {
+				bloqueTetromino=new Cell();
+				if(s[i][j] == Tetromino.BLOCK || s[i][j] == Tetromino.CENTROID) {
+					bloqueTetromino.setColor(blocks[i].getColor());
+				}
+				nextTet[i][j] = bloqueTetromino;
 				panelTetro.add(nextTet[i][j]);
 			}
 		}
-		
-		for (int i = 0; i < blocks.length; i++) {
-			x = blocks[i].getX();
-			y = blocks[i].getY();
-			nextTet[x][y].setColor(blocks[i].getColor());
-		}
-		
-//		for(int i = 0; i < nextTet.length; i++) {
-//			for(int j = 0; j < nextTet[i].length; j++) {
-//				if(nextTet[i][j] != null) {
-//					miniTetro = new ImageIcon(GUI.class.getResource(nextTet[i][j].getImagePath()));
-//					JLabel cubito = new JLabel();
-//					cubito.setIcon(miniTetro);
-//					panelTetro.add(cubito);
-//				} else {
-//					miniTetro = new ImageIcon(GUI.class.getResource("/gui/img/backgrounds/nextTet.png"));
-//					JLabel cubito = new JLabel();
-//					cubito.setIcon(miniTetro);
-//					panelTetro.add(cubito);
-//				}
-//			}
-//		}
 	}
 
 	/**
@@ -151,11 +150,19 @@ public class GUI extends JFrame{
 	 */
 	
 	private void infoTetro() {
+		nextTet = new Cell[4][4];
+		
+		panel_1 = new JPanel();
+		panel_1.setBounds(425, 50, 100, 100);
+		getContentPane().add(panel_1);
+		panel_1.setLayout(null);
+		
 		panelTetro = new JPanel();
+		panelTetro.setBounds(0, 0, 100, 100);
 		panelTetro.setBackground(new Color(0, 128, 128));
-		panelTetro.setBounds(425, 50, 100, 100);
 		panelTetro.setLayout(new GridLayout(4, 4, 0, 0));
-		getContentPane().add(panelTetro);
+		panel_1.add(panelTetro);
+		
 		
 		lblNext = new JLabel("NEXT");
 		lblNext.setBounds(425, 175, 100, 25);
