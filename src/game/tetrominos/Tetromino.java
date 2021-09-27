@@ -76,33 +76,61 @@ public abstract class Tetromino {
 		rotate(shapeMatrix);
 	}
 	
+	private void printMatrix() {		// TODO temp method
+		for(int y = shape.length - 1; y >= 0; y--) {
+			for(int x = 0; x < shape.length; x++) {
+				System.out.print(shape[x][y] + " ");
+			}
+			System.out.println();
+		}
+	}
+	
 	/**
 	 * Rota este tetromino segun la matriz dada.
 	 */
 	public void rotate(int[][] shapeMatrix) {
 		Block[] tetro = getBlocks();
-		List<int[]> rotatedCollisionCoords = new ArrayList<int[]>(tetro.length);
-		int[] centroidPos = getCentroidPosInShape(shapeMatrix);
-		for(int i = 0; i < shapeMatrix.length; i++)
-			for(int j = 0; j < shapeMatrix[0].length; j++)
-				if(shapeMatrix[i][j] != EMPTY) {
-					int rotatedX = centroid.getX() - centroidPos[0] + i;
-					int rotatedY = centroid.getY() - centroidPos[1] + j;
-					rotatedCollisionCoords.add(new int[] {rotatedX, rotatedY});
+		
+		int[][] rotatedCollisionCoords = new int[tetro.length][];
+		
+		int[] centroidPosInShape = getCentroidPosInShape(shapeMatrix);
+		int collisionCoordsIndex = 0;
+		boolean rotationSuccess = false;
+		
+		System.out.println("centroid in shape x = " + centroidPosInShape[0] + ", centroid in shape y = " + centroidPosInShape[1]);
+		System.out.println("centroid in grid x = " + centroid.getX() + ", centroid in grid y = " + centroid.getY());
+		
+		rotatedCollisionCoords[collisionCoordsIndex++] = new int[] {centroid.getX(), centroid.getY()};
+		
+		for(int x = 0; x < shapeMatrix.length; x++)
+			for(int y = 0; y < shapeMatrix[0].length; y++)
+				if(shapeMatrix[x][y] == BLOCK) {
+					int rotatedX = centroid.getX() - centroidPosInShape[0] + x;
+					int rotatedY = centroid.getY() - centroidPosInShape[1] + y;
+					rotatedCollisionCoords[collisionCoordsIndex++] = new int[] {rotatedX, rotatedY};
 				}
+		
 		if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
-			reposition((int[][])rotatedCollisionCoords.toArray());
+			System.out.println("Reposition rotated");	// TODO println
+			reposition(rotatedCollisionCoords);
+			rotationSuccess = true;
 		} else {
 			shift(rotatedCollisionCoords, -1);
 			if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
-				reposition((int[][])rotatedCollisionCoords.toArray());
+				System.out.println("Reposition rotated and left");	// TODO println
+				reposition(rotatedCollisionCoords);
+				rotationSuccess = true;
 			} else {
 				shift(rotatedCollisionCoords, 2);
 				if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
-					reposition((int[][])rotatedCollisionCoords.toArray());
+					System.out.println("Reposition rotated and right");	// TODO println
+					reposition(rotatedCollisionCoords);
+					rotationSuccess = true;
 				}
 			}
 		}
+		if(rotationSuccess)
+			shape = shapeMatrix;
 	}
 	
 	/**
@@ -110,12 +138,12 @@ public abstract class Tetromino {
 	 * @param coords Una lista de coordenadas expresadas como arreglo arr de dos componentes tal que arr[0] == x, arr[1] == y.
 	 * @return True si alguna de las coordenadas esta fuera de los limites de la grilla, false si no.
 	 */
-	private boolean outOfBounds(List<int[]> coords) {
+	private boolean outOfBounds(int[][] coords) {
 		boolean outOfBounds = false;
 		int[] pair;
-		for(int i = 0; i < coords.size() && !outOfBounds; i++) {
-			pair = coords.get(i);
-			if(0 < pair[0] && pair[0] < Grid.COLUMNS && 0 < pair[1] && pair[1] < Grid.ROWS)
+		for(int i = 0; i < coords.length && !outOfBounds; i++) {
+			pair = coords[i];
+			if( pair[0] < 0 || pair[0] >= Grid.COLUMNS || pair[1] < 0 || pair[1] >= Grid.ROWS )
 				outOfBounds = true;
 		}
 		return outOfBounds;
@@ -126,9 +154,9 @@ public abstract class Tetromino {
 	 * @param coords Una lista de coordenadas expresadas como arreglo arr de dos componentes tal que arr[0] == x, arr[1] == y.
 	 * @param shift El valor en el cual se desplazara la coordenada x de cada par de coordenadas.
 	 */
-	private void shift(List<int[]> coords, int shift) {
-		for(int i = 0; i < coords.size(); i++) {
-			coords.get(i)[0] += shift;
+	private void shift(int[][] coords, int shift) {
+		for(int i = 0; i < coords.length; i++) {
+			coords[i][0] += shift;
 		}
 	}
 	
@@ -138,11 +166,11 @@ public abstract class Tetromino {
 	 * @param coords Una lista de coordenadas expresadas como arreglo arr de dos componentes tal que arr[0] == x, arr[1] == y.
 	 * @return Un arreglo con los bloques que se encuantran en las coordenadas pasadas como parametro.
 	 */
-	private Block[] blocksFromCoords(List<int[]> coords) {
+	private Block[] blocksFromCoords(int[][] coords) {
 		int[] pair;
-		Block[] blocks = new Block[coords.size()];
-		for(int i = 0; i < coords.size(); i++) {
-			pair = coords.get(i);
+		Block[] blocks = new Block[coords.length];
+		for(int i = 0; i < coords.length; i++) {
+			pair = coords[i];
 			try {
 				blocks[i] = grid.getBlock(pair[0], pair[1]);
 			} catch(GridException e) {
@@ -176,8 +204,9 @@ public abstract class Tetromino {
 	 */
 	protected void reposition(int[][] newBlockCoords) {
 		Set<List<Integer>> toUpdate = new HashSet<List<Integer>>(8);
+		Block[] tetrBlocks = getBlocks();
 		// Remueve bloques
-		for(Block block : blocks) {
+		for(Block block : tetrBlocks) {
 			try {
 				grid.removeBlock(block.getX(), block.getY());
 			} catch(GridException e) {
@@ -186,10 +215,10 @@ public abstract class Tetromino {
 			toUpdate.add(Arrays.asList(new Integer[] {block.getX(), block.getY()}));
 		}
 		// Añade bloques
-		for(int i = 0; i < blocks.length; i++) {
-			blocks[i].setCoordinates(newBlockCoords[i][0], newBlockCoords[i][1]);
-			grid.addBlock(blocks[i]);
-			toUpdate.add(Arrays.asList(new Integer[] {blocks[i].getX(), blocks[i].getY()}));
+		for(int i = 0; i < tetrBlocks.length; i++) {
+			tetrBlocks[i].setCoordinates(newBlockCoords[i][0], newBlockCoords[i][1]);
+			grid.addBlock(tetrBlocks[i]);
+			toUpdate.add(Arrays.asList(new Integer[] {tetrBlocks[i].getX(), tetrBlocks[i].getY()}));
 		}
 		notifyGUI(toUpdate);
 	}
@@ -203,6 +232,7 @@ public abstract class Tetromino {
 			throw new TetrominoException("Se intento hacer caer un tetromino que no esta cayendo");
 		Block[] tetrBlocks = getBlocks();
 		if(collidesBottom(tetrBlocks)) {
+			grid.deleteLines();
 			falling = false;
 		} else {
 			int[][] newBlockCoords = new int[tetrBlocks.length][];
@@ -266,7 +296,7 @@ public abstract class Tetromino {
 		Block[] collisionBlocks = new Block[tetrBlocks.length];
 		boolean collides = false;
 		for(int i = 0; i < tetrBlocks.length; i++) {
-			if(tetrBlocks[i].getX() + 1 <= Grid.COLUMNS)
+			if(tetrBlocks[i].getX() + 1 < Grid.COLUMNS)
 				try {
 					collisionBlocks[i] = grid.getBlock(tetrBlocks[i].getX() + 1, tetrBlocks[i].getY());
 				} catch(GridException e) {

@@ -28,16 +28,11 @@ public class Game {
 	}
 	
 	/**
-	 * Checkea si el tetromino actual de la grilla está cayendo.
-	 * Si está cayendo, lo hace caer nuevamente, 
-	 * caso contrario elimina las lineas completas si las hay y hace caer el proximo tetromino.
+	 * Hace caer el tetromino que se encuantra actualmente en caida.
 	 */
 	public void run() {
 		try {
-			if(grid.getFallingTetr().isFalling())
-				grid.getFallingTetr().fall();
-			else
-				addPoints(grid.deleteLines());
+			grid.getFallingTetr().fall();
 		} catch (TetrominoException e) {
 			e.printStackTrace();
 		}
