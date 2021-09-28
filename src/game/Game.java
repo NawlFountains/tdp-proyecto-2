@@ -2,6 +2,8 @@ package game;
 
 import exceptions.TetrominoException;
 import gui.GUI;
+import threads.GameThread;
+import threads.TimerThread;
 
 /**
  * Modela el juego.
@@ -11,11 +13,11 @@ public class Game {
 	
 	//Atributos de instancia
 	
-	protected Grid grid;
 	protected int points = 0;
 	protected int elapsedTime = 0;
 	protected boolean lost;
 
+	protected Grid grid;
 	protected GUI gui;
 
 	/**
@@ -25,11 +27,22 @@ public class Game {
 		grid = new Grid(this);
 		gui = new GUI(this);
 		this.lost = false;
+
+		gui.updateElapsedTime();
+		gui.updatePoints();
+	}
+	
+	public void start() {
+		grid.addTetromino();
 		
 		gui.updateGrid();
 		gui.updateNextTetr();
-		gui.updateElapsedTime();
-		gui.updatePoints();
+		
+		Thread gameThread = new GameThread(this);
+		Thread timerThread = new TimerThread(this);
+		
+		gameThread.start();
+		timerThread.start();
 	}
 	
 	/**
@@ -96,10 +109,16 @@ public class Game {
 	 * @return la cantidad de milisegundos entre ejecución, calculada con el tiempo transcurrido actual.
 	 */
 	public int getPauseBetweenRun() {
-		if(elapsedTime < 900)
-			return 1000 - elapsedTime;
-		else 
-			return 100;
+		int minPause = 50;
+		int maxPause = 1000;
+		int maxSpeedTime = 900;
+		
+		int toReturn = minPause;
+		if(!gui.fallKeyPressed() && elapsedTime <= maxSpeedTime) {
+			int slope = - (maxPause - minPause) / maxSpeedTime;
+			toReturn = (int)(slope * elapsedTime + maxPause);
+		}
+		return toReturn;
 	}
 	
 	/**
