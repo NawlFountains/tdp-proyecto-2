@@ -251,19 +251,19 @@ public class GUI extends JFrame{
 		panel_1 = new JPanel();
 		panel_1.setBounds(425, 50, 100, 100);
 		panel_1.setLayout(null);
-		panel_1.setBackground(new java.awt.Color(0,162,232));
+		panel_1.setBackground(new java.awt.Color(0, 0, 43));
 		getContentPane().add(panel_1);
 		
 		panelTetro = new JPanel();
 		panelTetro.setBounds(0, 0, 100, 100);
-		panelTetro.setBackground(new java.awt.Color(0, 128, 128));
+		panelTetro.setBackground(new java.awt.Color(0, 0, 43));
 		panelTetro.setLayout(new GridLayout(4, 4, 0, 0));
 		panel_1.add(panelTetro);
 		
 		
 		lblNext = new JLabel("NEXT");
 		lblNext.setBounds(425, 175, 100, 25);
-		lblNext.setForeground(new java.awt.Color(0,0,43));
+		lblNext.setForeground(new java.awt.Color(0, 0, 43));
 		lblNext.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNext.setFont(new Font("SansSerif", Font.BOLD, 20));
 		getContentPane().add(lblNext);
