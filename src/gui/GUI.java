@@ -46,10 +46,11 @@ public class GUI extends JFrame{
 	public GUI(Game juego) {
 		this.juego = juego;
 		initialize();
-		updateElapsedTime();
-		updatePoints();
-		updateNextTetr();
-		updateGrid();
+		
+		//updateElapsedTime(); TODO
+		//updatePoints(); TODO
+		//updateNextTetr(); TODO
+		//updateGrid(); TODO
 	}
 	
 	/**
