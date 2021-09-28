@@ -109,8 +109,8 @@ public class Game {
 	 * @return la cantidad de milisegundos entre ejecución, calculada con el tiempo transcurrido actual.
 	 */
 	public int getPauseBetweenRun() {
-		float minPause = 50;
-		float maxPause = 900;
+		float minPause = 70;
+		float maxPause = 700;
 		float maxSpeedTime = 300;
 		
 		double toReturn = minPause;
