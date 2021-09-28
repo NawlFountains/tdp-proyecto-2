@@ -168,7 +168,10 @@ public class GUI extends JFrame{
 	 * Actualiza el valor del label que informa el tiempo
 	 */
 	public void updateElapsedTime() {
-		lblInfoTime.setText("" + juego.getElapsedTime());
+		int seg = juego.getElapsedTime();
+		int min = seg/60;
+		seg = seg%60;
+		lblInfoTime.setText(min + " : " + seg);
 	}
 	
 	/**
