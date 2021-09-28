@@ -109,16 +109,16 @@ public class Game {
 	 * @return la cantidad de milisegundos entre ejecución, calculada con el tiempo transcurrido actual.
 	 */
 	public int getPauseBetweenRun() {
-		int minPause = 50;
-		int maxPause = 1000;
-		int maxSpeedTime = 900;
+		float minPause = 50;
+		float maxPause = 900;
+		float maxSpeedTime = 300;
 		
-		int toReturn = minPause;
+		double toReturn = minPause;
 		if(!gui.fallKeyPressed() && elapsedTime <= maxSpeedTime) {
-			int slope = - (maxPause - minPause) / maxSpeedTime;
-			toReturn = (int)(slope * elapsedTime + maxPause);
+			float slope = - (maxPause - minPause) / maxSpeedTime;
+			toReturn = slope * elapsedTime + maxPause;
 		}
-		return toReturn;
+		return (int) Math.round(toReturn);
 	}
 	
 	/**
