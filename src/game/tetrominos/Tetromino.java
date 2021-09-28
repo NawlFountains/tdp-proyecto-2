@@ -199,7 +199,7 @@ public abstract class Tetromino {
 	 * Reposiciona los bloques de este tetromino en la grilla de acuerdo a las coordenadas pasadas como parametro.
 	 * @param newBlockCoords Las nuevas coordenadas de este tetromino en la grilla.
 	 */
-	protected void reposition(int[][] newBlockCoords) {
+	protected synchronized void reposition(int[][] newBlockCoords) {
 		Set<List<Integer>> toUpdate = new HashSet<List<Integer>>(8);
 		Block[] tetrBlocks = getBlocks();
 		// Remueve bloques

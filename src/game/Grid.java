@@ -39,7 +39,7 @@ public class Grid {
 	 * Elimina lineas de bloques , llama a fall() y retorna 100,200,500 u 800, si se elimina 1, 2 ,3 o 4 lineas respectivamente.
 	 * @return Un entero positivo, representando los puntos obtenidos por lineas eliminadas.
 	 */
-	public void deleteLines() {
+	public synchronized void deleteLines() {
 		int completedLines = 0;
 		int points = 0;
 		int minRow = ROWS;
