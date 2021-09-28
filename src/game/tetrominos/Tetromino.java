@@ -41,6 +41,8 @@ public abstract class Tetromino {
 	public void setGrid(Grid grid) {
 		this.grid = grid;
 		
+		Set<List<Integer>> toUpdate = new HashSet<List<Integer>>(8);
+		
 		boolean collides = false;
 		int[] centroidCoordsInShape = getCentroidPosInShape(shape);
 		centroid.setCoordinates(Grid.COLUMNS / 2, Grid.ROWS - 1 - (shape.length - 1 - centroidCoordsInShape[1]));
@@ -56,24 +58,31 @@ public abstract class Tetromino {
 		
 		for(Block block : getBlocks()) {
 			try {
-				if( grid.getBlock(block.getX(), block.getY()) != null )
+				if( grid.getBlock(block.getX(), block.getY()) != null ) {
 					collides = true;
+				}
 			} catch (GridException e) {
 				e.printStackTrace();
 			}
 		}
-		if(!collides)
+		if(!collides) {
 			for(Block block : getBlocks()) {
 				grid.addBlock(block);
+				toUpdate.add(Arrays.asList(new Integer[] {block.getX(), block.getY()}));
 			}
-		else
+			notifyGUI(toUpdate);
+		} else {
 			grid.getGame().lose();
+		}
 	}
 	
 	/**
 	 * Rota este tetromino en sentido levogiro.
+	 * @throws TetrominoException Si este tetromino no esta cayendo.
 	 */
-	public void rotateLev() {
+	public void rotateLev() throws TetrominoException {
+		if(!falling)
+			throw new TetrominoException("Se intento rotar un tetromino que no esta cayendo");
 		int[][] shapeMatrix = getShape();
 		rotateMatrixLev(shapeMatrix);
 		rotate(shapeMatrix);
@@ -81,8 +90,11 @@ public abstract class Tetromino {
 	
 	/**
 	 * Rota este tetromino en sentido dextrogiro.
+	 * @throws TetrominoException Si este tetromino no esta cayendo.
 	 */
-	public void rotateDext() {
+	public void rotateDext() throws TetrominoException {
+		if(!falling)
+			throw new TetrominoException("Se intento rotar un tetromino que no esta cayendo");
 		int[][] shapeMatrix = getShape();
 		rotateMatrixDext(shapeMatrix);
 		rotate(shapeMatrix);
@@ -224,7 +236,7 @@ public abstract class Tetromino {
 	 * Hace caer a este tetromino.
 	 * @throws TetrominoException Si este tetromino no esta cayendo.
 	 */
-	public void fall() throws TetrominoException {
+	public synchronized void fall() throws TetrominoException {
 		if(!falling)
 			throw new TetrominoException("Se intento hacer caer un tetromino que no esta cayendo");
 		Block[] tetrBlocks = getBlocks();
@@ -396,7 +408,7 @@ public abstract class Tetromino {
 	 * Notifica a la gui que debe actualizar las coordenadas pasadas como parametro.
 	 * @param toUpdate Un set de listas de dos componentes x e y.
 	 */
-	public void notifyGUI(Set<List<Integer>> toUpdate) {
+	public synchronized void notifyGUI(Set<List<Integer>> toUpdate) {
 		for(List<Integer> coords : toUpdate) {
 			grid.getGame().getGUI().updateCell(coords.get(0), coords.get(1));
 		}
