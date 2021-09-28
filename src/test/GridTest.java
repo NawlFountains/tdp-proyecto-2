@@ -149,8 +149,7 @@ class GridTest {
 		}
 		
 		System.out.println("Before delete 4");
-		printGrid();
-		assertEquals(800, grid.deleteLines());		// borrar 4 filas
+		printGrid();								// borrar 4 filas
 		System.out.println("After delete 4");
 		printGrid();
 		
@@ -184,8 +183,7 @@ class GridTest {
 		}
 
 		System.out.println("Before delete 1");
-		printGrid();
-		assertEquals(100, grid.deleteLines());		// borrar 1 fila
+		printGrid();										// borrar 1 fila
 		System.out.println("After delete 1");
 		printGrid();
 
@@ -219,8 +217,7 @@ class GridTest {
 		}
 
 		System.out.println("Before delete 2");
-		printGrid();
-		assertEquals(200, grid.deleteLines());		// borrar 2 filas
+		printGrid();									// borrar 2 filas
 		System.out.println("After delete 2");
 		printGrid();
 
@@ -254,8 +251,7 @@ class GridTest {
 		}
 
 		System.out.println("Before delete 3");
-		printGrid();
-		assertEquals(500, grid.deleteLines());		// borrar 3 filas
+		printGrid();										// borrar 3 filas
 		System.out.println("After delete 3");
 		printGrid();
 
@@ -272,8 +268,7 @@ class GridTest {
 		}
 
 		System.out.println("Before delete 0");
-		printGrid();
-		assertEquals(0, grid.deleteLines());		// borrar 0 filas
+		printGrid();										// borrar 0 filas
 		System.out.println("After delete 0");
 		printGrid();
 
@@ -307,8 +302,7 @@ class GridTest {
 		}
 		
 		System.out.println("Before delete 2 in middle");
-		printGrid();
-		assertEquals(200, grid.deleteLines());					// borrar 2 filas en el medio
+		printGrid();											// borrar 2 filas en el medio
 		System.out.println("After delete 2 in middle");
 		printGrid();
 		

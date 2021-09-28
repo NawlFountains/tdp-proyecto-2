@@ -24,6 +24,7 @@ public class TimerThread extends Thread {
 	public void run() {
 		while(!game.lost()) {
 			game.addSecond();
+			game.getGUI().updateElapsedTime();
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
