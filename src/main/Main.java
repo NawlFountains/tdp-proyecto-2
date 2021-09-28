@@ -17,14 +17,11 @@ public class Main {
 	public static void main(String[] args) {
 		Game game = new Game();
 		GUI ventana = game.getGUI();
-		Thread gameThread = new GameThread(game);
-		Thread timerThread = new TimerThread(game);
 		
 		ventana.setLocationRelativeTo(null);
 		ventana.setVisible(true);
 		
-		gameThread.start();
-		timerThread.start();
+		game.start();
 	}
 
 }
