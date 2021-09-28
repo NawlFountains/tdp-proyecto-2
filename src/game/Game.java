@@ -25,6 +25,11 @@ public class Game {
 		grid = new Grid(this);
 		gui = new GUI(this);
 		this.lost = false;
+		
+		gui.updateGrid();
+		gui.updateNextTetr();
+		gui.updateElapsedTime();
+		gui.updatePoints();
 	}
 	
 	/**
@@ -103,4 +108,12 @@ public class Game {
 	public void addSecond() {
 		elapsedTime++;
 	}
+	
+	/**
+	 * Termina este juego, seteando el valor de lost en verdadero.
+	 */
+	public void lose() {
+		lost = true;
+	}
+	
 }
