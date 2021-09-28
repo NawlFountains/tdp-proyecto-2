@@ -60,6 +60,8 @@ public class GUI extends JFrame{
 		setBounds(100, 100, 565, 663);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
+		setIconImage(new ImageIcon(getClass().getResource("/gui/img/icon/iconTetr.png")).getImage());
+		setTitle("Tetris");
 		
 		crearPanelJuego();
 		crearInfoTetro();
@@ -193,7 +195,7 @@ public class GUI extends JFrame{
 			}
 		}
 	}
-
+	
 	/**
 	 * Crea un label con una imagen de fondo
 	 */
