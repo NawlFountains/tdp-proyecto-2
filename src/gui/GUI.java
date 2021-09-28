@@ -13,11 +13,16 @@ import game.Grid;
 import game.tetrominos.Block;
 import game.tetrominos.Color;
 import game.tetrominos.Tetromino;
+import threads.GameThread;
+import threads.TimerThread;
 
 import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame{
@@ -31,6 +36,9 @@ public class GUI extends JFrame{
 	private JLabel background_1;
 	private JPanel panel_1;
 	private JPanel panelTetro;
+	private JPanel panelGameOver;
+	private JLabel lblGameOver;
+	private JButton btnRestart;
 	protected ImageIcon miniTetro;
 	
 	protected Cell[][] cells;
@@ -65,6 +73,7 @@ public class GUI extends JFrame{
 		setIconImage(new ImageIcon(getClass().getResource("/gui/img/icon/iconTetr.png")).getImage());
 		setTitle("Tetris");
 		
+		crearPanelGameOver();
 		crearPanelJuego();
 		crearInfoTetro();
 		crearInfoStats();
@@ -169,9 +178,13 @@ public class GUI extends JFrame{
 	 */
 	public void updateElapsedTime() {
 		int seg = juego.getElapsedTime();
-		int min = seg/60;
-		seg = seg%60;
-		lblInfoTime.setText(min + " : " + seg);
+		int min = seg / 60;
+		seg = seg % 60;
+		String rta = new StringBuilder(String.format("%02d", min))
+				.append(" : ")
+				.append(String.format("%02d", seg))
+				.toString();
+		lblInfoTime.setText(rta);
 	}
 	
 	/**
@@ -190,7 +203,7 @@ public class GUI extends JFrame{
 		
 		panelTetro.removeAll();
 		panelTetro.setLayout(new GridLayout(size, size, 0, 0));
-		// TODO set bounds
+		panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
 		
 		for(int y = size - 1; y >= 0; y--){
 			for(int x = 0; x < size; x++){
@@ -208,10 +221,13 @@ public class GUI extends JFrame{
 		panelTetro.repaint();
 	}
 	
+	public void gameOver() {
+		panelGameOver.setVisible(true);
+	}
+	
 	/**
 	 * Crea un label con una imagen de fondo
 	 */
-	
 	private void crearFondoVentana() {
 		background_1 = new JLabel("");
 		background_1.setIcon(new ImageIcon(GUI.class.getResource("/gui/img/backgrounds/bg.png")));
@@ -222,8 +238,49 @@ public class GUI extends JFrame{
 	/**
 	 * Crea el panel del juego, por donde caen los tetrominos e inicializa la grilla de celdas
 	 */
+	private void crearPanelGameOver() {
+		panelGameOver = new JPanel();
+		panelGameOver.setBounds(125, 200, 300, 150);
+		panelGameOver.setBackground(new java.awt.Color(135, 206, 235));
+		panelGameOver.setLayout(null);
+		getContentPane().add(panelGameOver);
+		
+		lblGameOver = new JLabel("GAME OVER");
+		lblGameOver.setHorizontalAlignment(SwingConstants.CENTER);
+		lblGameOver.setForeground(new java.awt.Color(0, 0, 43));
+		lblGameOver.setFont(new Font("SansSerif", Font.BOLD, 40));
+		lblGameOver.setBounds(10, 10, 280, 70);
+		panelGameOver.add(lblGameOver);
+		
+		btnRestart = new JButton("REINICIAR");
+		btnRestart.setFont(new Font("SansSerif", Font.BOLD, 20));
+		btnRestart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Restart"); //TODO
+				Game game = new Game();
+				GUI ventana = game.getGUI();
+				Thread gameThread = new GameThread(game);
+				Thread timerThread = new TimerThread(game);
+				
+				ventana.setLocationRelativeTo(null);
+				ventana.setVisible(true);
+				
+				gameThread.start();
+				timerThread.start();
+				
+				dispose();
+			}
+		});
+		btnRestart.setBounds(75, 75, 150, 50);
+		btnRestart.setBackground(new java.awt.Color(0, 0, 43));
+		btnRestart.setForeground(new java.awt.Color(135,206,235));
+		panelGameOver.add(btnRestart);
+		panelGameOver.setVisible(false);
+	}
 	
 	private void crearPanelJuego() {
+		
+		
 		panel = new JPanel();
 		panel.setBackground(new java.awt.Color(0,0,43));
 		panel.setBounds(150, 50, 250, 525);

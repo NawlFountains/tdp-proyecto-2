@@ -114,6 +114,7 @@ public class Game {
 	 */
 	public void lose() {
 		lost = true;
+		gui.gameOver();
 	}
 	
 }
