@@ -29,8 +29,6 @@ public class Grid {
 	public Grid(Game game) {
 		this.game = game;
 		blockMatrix = new Block[COLUMNS][ROWS]; //Simula sistema cartesiano de coordeandas
-		fallingTetromino = randomTetromino();
-		fallingTetromino.setGrid(this);
 		nextTetromino = randomTetromino();
 	}
 	
