@@ -36,9 +36,6 @@ public class GUI extends JFrame{
 	private JLabel background_1;
 	private JPanel panel_1;
 	private JPanel panelTetro;
-	private JPanel panelGameOver;
-	private JLabel lblGameOver;
-	private JButton btnRestart;
 	protected ImageIcon miniTetro;
 	
 	protected Cell[][] cells;
@@ -75,7 +72,6 @@ public class GUI extends JFrame{
 		setIconImage(new ImageIcon(getClass().getResource("/gui/img/icon/iconTetr.png")).getImage());
 		setTitle("Tetris");
 		
-		crearPanelGameOver();
 		crearPanelJuego();
 		crearInfoTetro();
 		crearInfoStats();
@@ -266,7 +262,7 @@ public class GUI extends JFrame{
 	}
 	
 	public void gameOver() {
-		panelGameOver.setVisible(true);
+		GameOverWindow ventanaGameOver = new GameOverWindow(this);
 	}
 	
 	/**
@@ -282,48 +278,6 @@ public class GUI extends JFrame{
 	/**
 	 * Crea el panel del juego, por donde caen los tetrominos e inicializa la grilla de celdas
 	 */
-	private void crearPanelGameOver() {
-		panelGameOver = new JPanel();
-		panelGameOver.setBounds(125, 200, 300, 150);
-		panelGameOver.setBackground(new java.awt.Color(135, 206, 235));
-		panelGameOver.setLayout(null);
-		getContentPane().add(panelGameOver);
-		
-		lblGameOver = new JLabel("GAME OVER");
-		lblGameOver.setHorizontalAlignment(SwingConstants.CENTER);
-		lblGameOver.setForeground(new java.awt.Color(0, 0, 43));
-		lblGameOver.setFont(new Font("SansSerif", Font.BOLD, 40));
-		lblGameOver.setBounds(10, 10, 280, 70);
-		panelGameOver.add(lblGameOver);
-		
-		btnRestart = new JButton("REINICIAR");
-		btnRestart.setFont(new Font("SansSerif", Font.BOLD, 20));
-		btnRestart.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Restart"); //TODO
-				Game game = new Game();
-				GUI ventana = game.getGUI();
-				Thread gameThread = new GameThread(game);
-				Thread timerThread = new TimerThread(game);
-				
-				ventana.setLocationRelativeTo(null);
-				ventana.setVisible(true);
-				
-				gameThread.start();
-				timerThread.start();
-				
-				dispose();
-			}
-			
-		});
-		btnRestart.setBounds(75, 75, 150, 50);
-		btnRestart.setBackground(new java.awt.Color(0, 0, 43));
-		btnRestart.setForeground(new java.awt.Color(135,206,235));
-		panelGameOver.add(btnRestart);
-		panelGameOver.setVisible(false);
-	}
 	
 	private void crearPanelJuego() {
 		
