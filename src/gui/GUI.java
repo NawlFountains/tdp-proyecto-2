@@ -44,7 +44,9 @@ public class GUI extends JFrame{
 	protected Cell[][] cells;
 	protected Cell[][] nextTet;
 	protected Game juego;
-
+	
+	protected boolean rotateKeyPressed = false;
+	protected boolean fallKeyPressed = false;
 
 	/**
 	 * Crea una nueva GUI y la asocia al juego pasado como parametro.
@@ -82,48 +84,85 @@ public class GUI extends JFrame{
 	}
 	
 	private void addControls() {
-		addKeyListener(new KeyAdapter() {
+		// Añade listener para el movimiento lateral.
+		this.addKeyListener(new KeyAdapter() {
+
 			@Override
 			public void keyPressed(KeyEvent e) {
-				int a=e.getKeyCode();
-				System.out.println(a); //TODO
-				
 				try {
-					switch (a) {
+					switch (e.getKeyCode()) {
 					case KeyEvent.VK_LEFT:
-						
 						System.out.println("left"); //TODO
 						juego.getGrid().getFallingTetr().moveLeft(); 
 						break;
 					case KeyEvent.VK_RIGHT:
-
 						System.out.println("right"); //TODO
 						juego.getGrid().getFallingTetr().moveRight(); 
 						break;
-					case KeyEvent.VK_DOWN:
-
-						System.out.println("down"); //TODO
-						juego.getGrid().getFallingTetr().fall(); 
-						break;
-					case KeyEvent.VK_Z:
-
-						System.out.println("rotateLev"); //TODO
-						juego.getGrid().getFallingTetr().rotateLev();
-						break;
-					case KeyEvent.VK_X:
-
-						System.out.println("rotateDext"); //TODO
-						juego.getGrid().getFallingTetr().rotateDext();
-						break;
-						
 					}
-				}catch(TetrominoException ex) {
+				} catch(TetrominoException ex) {
 					ex.printStackTrace();
 				}
-				
-				
 			}
+
 		});
+
+		// Añade listener para la caida
+		this.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(!fallKeyPressed) {
+					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+						fallKeyPressed = true;
+					}
+				}
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+					fallKeyPressed = false;
+				}
+			}
+
+		});
+
+		// Añade listener para la rotacion.
+		this.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(!rotateKeyPressed) {
+					try {
+						switch(e.getKeyCode()) {
+						case KeyEvent.VK_Z:
+							juego.getGrid().getFallingTetr().rotateLev();
+							rotateKeyPressed = true;
+							break;
+						case KeyEvent.VK_X:
+							juego.getGrid().getFallingTetr().rotateDext();
+							rotateKeyPressed = true;
+							break;
+						}
+					} catch (TetrominoException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				switch(e.getKeyCode()) {
+				case KeyEvent.VK_Z:
+				case KeyEvent.VK_X:
+					rotateKeyPressed = false;
+					break;
+				}
+			}
+
+		});
+
 	}
 	
 	/**
@@ -133,13 +172,14 @@ public class GUI extends JFrame{
 		
 		try {
 			Block bloque;
-			for(int i = 0; i < cells.length; i++) {
-				for(int j = 0; j < cells[i].length; j++) {
+			for (int i = 0; i < cells.length; i++) {
+				for (int j = 0; j < cells[i].length; j++) {
 					bloque=juego.getGrid().getBlock(i, j);
-					if(bloque!=null)
+					if (bloque!=null) {
 						cells[i][j].setColor(juego.getGrid().getBlock(i, j).getColor());
-					else
+					} else {
 						cells[i][j].setColor(null);
+					}
 				}
 			}
 		}catch(GridException ex) {
@@ -153,7 +193,7 @@ public class GUI extends JFrame{
 	 * @param x la coordenada x de la celda
 	 * @param y la coordenada y de la celda
 	 */
-	public void updateCell(int x, int y) {
+	public synchronized void updateCell(int x, int y) {
 		try {
 			Block bloque=juego.getGrid().getBlock(x, y);
 			if(bloque!=null)
@@ -221,6 +261,10 @@ public class GUI extends JFrame{
 		panelTetro.repaint();
 	}
 	
+	public boolean fallKeyPressed() {
+		return fallKeyPressed;
+	}
+	
 	public void gameOver() {
 		panelGameOver.setVisible(true);
 	}
@@ -255,6 +299,8 @@ public class GUI extends JFrame{
 		btnRestart = new JButton("REINICIAR");
 		btnRestart.setFont(new Font("SansSerif", Font.BOLD, 20));
 		btnRestart.addActionListener(new ActionListener() {
+			
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Restart"); //TODO
 				Game game = new Game();
@@ -270,6 +316,7 @@ public class GUI extends JFrame{
 				
 				dispose();
 			}
+			
 		});
 		btnRestart.setBounds(75, 75, 150, 50);
 		btnRestart.setBackground(new java.awt.Color(0, 0, 43));
