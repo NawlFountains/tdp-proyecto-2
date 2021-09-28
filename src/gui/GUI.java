@@ -67,10 +67,10 @@ public class GUI extends JFrame{
 		crearInfoTetro();
 		crearInfoStats();
 		crearFondoVentana();
-		controles();
+		addControls();
 	}
 	
-	private void controles() {
+	private void addControls() {
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -173,20 +173,24 @@ public class GUI extends JFrame{
 	 * Muetra el tetromino siguiente en el panelTetro
 	 */
 	public void updateNextTetr() {
+		int[][] shape = juego.getGrid().getNextTetr().getShape();
+		Color color = juego.getGrid().getNextTetr().getBlocks()[0].getColor();
 		
-		int[][] shape=juego.getGrid().getNextTetr().getShape();
+		int size = shape.length;
 		
-		Block[] blocks = juego.getGrid().getNextTetr().getBlocks();
+		nextTet = new Cell[size][size];
+		for(int i = 0; i < size; i++)
+			for(int j = 0; j < size; j++)
+				nextTet[i][j] = new Cell();
 		
-		int size=shape.length;
-		//si quieren ver la pantalla de "Design" comenten las dos lineas siguientes TODO
-		panelTetro.setLayout(new GridLayout(4, 4, 0, 0));
-		panelTetro.setBounds(0, 0, 100, 100);
+		panelTetro.removeAll();
+		panelTetro.setLayout(new GridLayout(size, size, 0, 0));
+		// TODO set bounds
 		
-		for(int y = 3; y >= 0; y--){
-			for(int x = 0; x < 4; x++){
-				if(x<size && y<shape[0].length && shape[x][y] != Tetromino.EMPTY) {
-					nextTet[x][y].setColor(blocks[x].getColor());
+		for(int y = size - 1; y >= 0; y--){
+			for(int x = 0; x < size; x++){
+				if(shape[x][y] != Tetromino.EMPTY) {
+					nextTet[x][y].setColor(color);
 				}
 				else {
 					nextTet[x][y].setColor(null);
@@ -194,6 +198,9 @@ public class GUI extends JFrame{
 				panelTetro.add(nextTet[x][y]);
 			}
 		}
+		
+		panelTetro.revalidate();
+		panelTetro.repaint();
 	}
 
 	/**
