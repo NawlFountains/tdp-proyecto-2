@@ -22,7 +22,7 @@ public class TimerThread extends Thread {
 	 */
 	@Override
 	public void run() {
-		while(!game.lost()) {
+		while (!game.lost()) {
 			game.addSecond();
 			game.getGUI().updateElapsedTime();
 			try {

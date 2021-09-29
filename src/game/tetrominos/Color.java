@@ -5,12 +5,12 @@ package game.tetrominos;
  */
 public enum Color {
 
-	BLUE(),
-	CYAN(),
-	ORANGE(),
-	YELLOW(),
-	GREEN(),
-	PURPLE(),
-	RED();
+	BLUE,
+	CYAN,
+	ORANGE,
+	YELLOW,
+	GREEN,
+	PURPLE,
+	RED;
 	
 }

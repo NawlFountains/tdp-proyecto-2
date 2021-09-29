@@ -1,5 +1,6 @@
 package threads;
 
+import exceptions.GameException;
 import game.Game;
 
 /**
@@ -22,11 +23,13 @@ public class GameThread extends Thread {
 	 */
 	@Override
 	public void run() {
-		while(!game.lost()) {
-			game.run();
+		while (!game.lost()) {
 			try {
+				game.run();
 				Thread.sleep(game.getPauseBetweenRun());
 			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (GameException e) {
 				e.printStackTrace();
 			}
 		}

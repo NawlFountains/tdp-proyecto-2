@@ -14,7 +14,7 @@ import game.tetrominos.Color;
 @SuppressWarnings("serial")
 public class Cell extends JLabel {
 	
-	protected static final String EMPTY_CELL_IMAGE_PATH = "gui/img/bloques/dummy.png";
+	protected static final String EMPTY_CELL_IMAGE_PATH = "gui/img/bloques/empty.png";
 	
 	/**
 	 * Crea una nueva celda con color vacio.
@@ -27,15 +27,6 @@ public class Cell extends JLabel {
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * Crea una nueva celda con el color pasado como parametro.
-	 * @param c El color de la nueva celda.
-	 */@Deprecated
-	public Cell(Color c) {
-		this();
-		setColor(c);
-	}
  
 	/**
 	 * Cambia el color de esta celda.
@@ -43,24 +34,19 @@ public class Cell extends JLabel {
 	 */
 	public void setColor(Color c) {
 		String colorPath;
-		if(c != null)
+		if (c != null) {
 			colorPath = new StringBuilder("gui/img/bloques/")
 							.append(c.toString().toLowerCase())
 							.append(".png")
 							.toString();
-		else
+		} else {
 			colorPath = EMPTY_CELL_IMAGE_PATH;
-		
+		}
 		try {
 			this.setIcon(new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream(colorPath))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	@Deprecated
-	public String getImagePath() {
-		return null;
 	}
 	
 }

@@ -33,9 +33,7 @@ public class GameOverWindow extends JFrame{
 		
 		this.setLocationRelativeTo(prevGUI);
 		
-		this.prevGUI.setEnabled(false);
 		initialize();
-		setVisible(true);
 	}
 	
 	/**

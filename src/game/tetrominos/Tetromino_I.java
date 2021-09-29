@@ -21,6 +21,11 @@ public class Tetromino_I extends Tetromino{
 	
 	@Override
 	public void rotate(int[][] shapeMatrix) {
+		/**
+		 * Sobreescribe el metodo en la clase padre para considerar el caso en que al rotar se debe
+		 * desplazar a esta pieza dos lugares a un lado en lugar de solo uno
+		 */
+		
 		Block[] tetro = getBlocks();
 		
 		int[][] rotatedCollisionCoords = new int[tetro.length][];
@@ -31,44 +36,37 @@ public class Tetromino_I extends Tetromino{
 		
 		rotatedCollisionCoords[collisionCoordsIndex++] = new int[] {centroid.getX(), centroid.getY()};
 		
-		for(int x = 0; x < shapeMatrix.length; x++)
-			for(int y = 0; y < shapeMatrix[0].length; y++)
-				if(shapeMatrix[x][y] == BLOCK) {
+		for (int x = 0; x < shapeMatrix.length; x++) {
+			for (int y = 0; y < shapeMatrix[0].length; y++) {
+				if (shapeMatrix[x][y] == BLOCK) {
 					int rotatedX = centroid.getX() - centroidPosInShape[0] + x;
 					int rotatedY = centroid.getY() - centroidPosInShape[1] + y;
 					rotatedCollisionCoords[collisionCoordsIndex++] = new int[] {rotatedX, rotatedY};
 				}
-		
-		if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
-			reposition(rotatedCollisionCoords);
-			rotationSuccess = true;
-		} else {
-			shift(rotatedCollisionCoords, -1);
-			if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
-				reposition(rotatedCollisionCoords);
-				rotationSuccess = true;
-			} else {
-				shift(rotatedCollisionCoords, 2);
-				if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
-					reposition(rotatedCollisionCoords);
-					rotationSuccess = true;
-				} else {
-					shift(rotatedCollisionCoords, -3);
-					if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
-						reposition(rotatedCollisionCoords);
-						rotationSuccess = true;
-					} else {
-						shift(rotatedCollisionCoords, 4);
-						if( !outOfBounds(rotatedCollisionCoords) && !collidesWith(tetro, blocksFromCoords(rotatedCollisionCoords)) ) {
-							reposition(rotatedCollisionCoords);
-							rotationSuccess = true;
-						}
-					}
-				}
 			}
 		}
-		if(rotationSuccess)
-			shape = shapeMatrix;
+		
+		rotationSuccess = attemptRotation(tetro, rotatedCollisionCoords);
+		if (!rotationSuccess) {
+			shift(rotatedCollisionCoords, -1);											// Desplaza a la izquierda (uno a la izquierda de la posicion original)
+			rotationSuccess = attemptRotation(tetro, rotatedCollisionCoords);
+		}
+		if (!rotationSuccess) {
+			shift(rotatedCollisionCoords, 2);											// Desplaza dos a la derecha (uno a la derecha de la posicion original)
+			rotationSuccess = attemptRotation(tetro, rotatedCollisionCoords);
+		}
+		if (!rotationSuccess) {
+			shift(rotatedCollisionCoords, -3);											// Desplaza tres a la izquierda (uno a la izquierda de la posicion original)
+			rotationSuccess = attemptRotation(tetro, rotatedCollisionCoords);
+		}
+		if (!rotationSuccess) {
+			shift(rotatedCollisionCoords, 4);											// Desplaza cuatro a la derecha (dos a la derecha de la posicion original)
+			rotationSuccess = attemptRotation(tetro, rotatedCollisionCoords);
+		}
+		
+		if (rotationSuccess) {															// Si la rotacion fue exitosa
+			shape = shapeMatrix;														// Actualiza la forma del tetromino
+		}
 	}
 	
 }

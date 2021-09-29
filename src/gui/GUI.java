@@ -13,19 +13,23 @@ import game.Grid;
 import game.tetrominos.Block;
 import game.tetrominos.Color;
 import game.tetrominos.Tetromino;
-import threads.GameThread;
-import threads.TimerThread;
 
 import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame{
+	
+	protected ImageIcon miniTetro;
+	
+	protected Cell[][] cells;
+	protected Cell[][] nextTet;
+	protected Game juego;
+	
+	protected boolean rotateKeyPressed = false;
+	protected boolean fallKeyPressed = false;
 	
 	private JPanel panel;
 	private JLabel lblTime;
@@ -36,28 +40,14 @@ public class GUI extends JFrame{
 	private JLabel background_1;
 	private JPanel panel_1;
 	private JPanel panelTetro;
-	protected ImageIcon miniTetro;
-	
-	protected Cell[][] cells;
-	protected Cell[][] nextTet;
-	protected Game juego;
-	
-	protected boolean rotateKeyPressed = false;
-	protected boolean fallKeyPressed = false;
 
 	/**
 	 * Crea una nueva GUI y la asocia al juego pasado como parametro.
 	 * @param game El juego asociado a esta GUI.
 	 */
-	
 	public GUI(Game juego) {
 		this.juego = juego;
 		initialize();
-		
-		//updateElapsedTime(); TODO
-		//updatePoints(); TODO
-		//updateNextTetr(); TODO
-		//updateGrid(); TODO
 	}
 	
 	/**
@@ -80,19 +70,16 @@ public class GUI extends JFrame{
 	}
 	
 	private void addControls() {
-		// Añade listener para el movimiento lateral.
-		this.addKeyListener(new KeyAdapter() {
+		this.addKeyListener(new KeyAdapter() {								// Añade listener para el movimiento lateral
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				try {
 					switch (e.getKeyCode()) {
 					case KeyEvent.VK_LEFT:
-						System.out.println("left"); //TODO
 						juego.getGrid().getFallingTetr().moveLeft(); 
 						break;
 					case KeyEvent.VK_RIGHT:
-						System.out.println("right"); //TODO
 						juego.getGrid().getFallingTetr().moveRight(); 
 						break;
 					}
@@ -102,14 +89,12 @@ public class GUI extends JFrame{
 			}
 
 		});
-
-		// Añade listener para la caida
-		this.addKeyListener(new KeyAdapter() {
+		this.addKeyListener(new KeyAdapter() {								// Añade listener para la caida
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(!fallKeyPressed) {
-					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				if (!fallKeyPressed) {
+					if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 						fallKeyPressed = true;
 					}
 				}
@@ -117,21 +102,19 @@ public class GUI extends JFrame{
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 					fallKeyPressed = false;
 				}
 			}
 
 		});
-
-		// Añade listener para la rotacion.
-		this.addKeyListener(new KeyAdapter() {
+		this.addKeyListener(new KeyAdapter() {								// Añade listener para la rotacion
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(!rotateKeyPressed) {
+				if (!rotateKeyPressed) {
 					try {
-						switch(e.getKeyCode()) {
+						switch (e.getKeyCode()) {
 						case KeyEvent.VK_Z:
 							juego.getGrid().getFallingTetr().rotateLev();
 							rotateKeyPressed = true;
@@ -149,7 +132,7 @@ public class GUI extends JFrame{
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				switch(e.getKeyCode()) {
+				switch (e.getKeyCode()) {
 				case KeyEvent.VK_Z:
 				case KeyEvent.VK_X:
 					rotateKeyPressed = false;
@@ -158,44 +141,42 @@ public class GUI extends JFrame{
 			}
 
 		});
-
 	}
 	
 	/**
-	 * Recorre toda la grilla y actualiza los colores de las celdas
+	 * Recorre toda la grilla y actualiza los colores de las celdas.
 	 */
 	public void updateGrid() {
-		
 		try {
 			Block bloque;
 			for (int i = 0; i < cells.length; i++) {
 				for (int j = 0; j < cells[i].length; j++) {
 					bloque=juego.getGrid().getBlock(i, j);
-					if (bloque!=null) {
+					if (bloque != null) {
 						cells[i][j].setColor(juego.getGrid().getBlock(i, j).getColor());
 					} else {
 						cells[i][j].setColor(null);
 					}
 				}
 			}
-		}catch(GridException ex) {
+		} catch (GridException ex) {
 			ex.printStackTrace();
 		}
-		
 	}
 	
 	/**
-	 * Cambia el color de la celda con corrdenadas x e y
-	 * @param x la coordenada x de la celda
-	 * @param y la coordenada y de la celda
+	 * Cambia el color de la celda con corrdenadas x e y.
+	 * @param x la coordenada x de la celda.
+	 * @param y la coordenada y de la celda.
 	 */
 	public synchronized void updateCell(int x, int y) {
 		try {
 			Block bloque=juego.getGrid().getBlock(x, y);
-			if(bloque!=null)
+			if (bloque != null) {
 				cells[x][y].setColor(juego.getGrid().getBlock(x, y).getColor());
-			else
+			} else {
 				cells[x][y].setColor(null);
+			}
 		} catch (GridException ex) {
 			ex.printStackTrace();
 		}
@@ -203,14 +184,14 @@ public class GUI extends JFrame{
 	}
 	
 	/**
-	 * Actualiza el valor del label que informa los puntos
+	 * Actualiza el valor del label que informa los puntos.
 	 */
 	public void updatePoints() {
 		lblInfoScore.setText("" + juego.getPoints());
 	}
 	
 	/**
-	 * Actualiza el valor del label que informa el tiempo
+	 * Actualiza el valor del label que informa el tiempo.
 	 */
 	public void updateElapsedTime() {
 		int seg = juego.getElapsedTime();
@@ -224,7 +205,7 @@ public class GUI extends JFrame{
 	}
 	
 	/**
-	 * Muetra el tetromino siguiente en el panelTetro
+	 * Muetra el tetromino siguiente en el panelTetro.
 	 */
 	public void updateNextTetr() {
 		int[][] shape = juego.getGrid().getNextTetr().getShape();
@@ -233,20 +214,21 @@ public class GUI extends JFrame{
 		int size = shape.length;
 		
 		nextTet = new Cell[size][size];
-		for(int i = 0; i < size; i++)
-			for(int j = 0; j < size; j++)
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				nextTet[i][j] = new Cell();
+			}
+		}
 		
 		panelTetro.removeAll();
 		panelTetro.setLayout(new GridLayout(size, size, 0, 0));
-		panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size*25, size*25);
+		panelTetro.setBounds(25 * (4 - size) / 2, 25 * (4 - size) / 2, size * 25, size * 25);
 		
-		for(int y = size - 1; y >= 0; y--){
-			for(int x = 0; x < size; x++){
-				if(shape[x][y] != Tetromino.EMPTY) {
+		for (int y = size - 1; y >= 0; y--) {
+			for (int x = 0; x < size; x++) {
+				if (shape[x][y] != Tetromino.EMPTY) {
 					nextTet[x][y].setColor(color);
-				}
-				else {
+				} else {
 					nextTet[x][y].setColor(null);
 				}
 				panelTetro.add(nextTet[x][y]);
@@ -257,16 +239,25 @@ public class GUI extends JFrame{
 		panelTetro.repaint();
 	}
 	
+	/**
+	 * Consulta si la tecla de aceleracion de caida esta presionada.
+	 * @return True si la tecla de aceleracion de caida esta presionada, false si no.
+	 */
 	public boolean fallKeyPressed() {
 		return fallKeyPressed;
 	}
 	
+	/**
+	 * Crea una nueva ventana de gameOver, la muestra en pantalla, y desactiva este frame.
+	 */
 	public void gameOver() {
 		GameOverWindow ventanaGameOver = new GameOverWindow(this);
+		ventanaGameOver.setVisible(true);
+		this.setEnabled(false);
 	}
 	
 	/**
-	 * Crea un label con una imagen de fondo
+	 * Crea un label con una imagen de fondo.
 	 */
 	private void crearFondoVentana() {
 		background_1 = new JLabel("");
@@ -276,12 +267,9 @@ public class GUI extends JFrame{
 	}
 	
 	/**
-	 * Crea el panel del juego, por donde caen los tetrominos e inicializa la grilla de celdas
+	 * Crea el panel del juego, por donde caen los tetrominos e inicializa la grilla de celdas.
 	 */
-	
 	private void crearPanelJuego() {
-		
-		
 		panel = new JPanel();
 		panel.setBackground(new java.awt.Color(0,0,43));
 		panel.setBounds(150, 50, 250, 525);
@@ -299,9 +287,8 @@ public class GUI extends JFrame{
 	}
 	
 	/**
-	 * Crea un panel en el cual se cargara el tetromino siguiente y un cartel con el texto next
+	 * Crea un panel en el cual se cargara el tetromino siguiente y un cartel con el texto "next".
 	 */
-	
 	private void crearInfoTetro() {
 		nextTet = new Cell[4][4];
 		
@@ -333,26 +320,26 @@ public class GUI extends JFrame{
 	}
 	
 	/**
-	 * Crea una serie de labels para mostrar los stats de juego
+	 * Crea una serie de labels para mostrar los stats de juego.
 	 */
 	private void crearInfoStats() {
 		lblTime = new JLabel("TIME");
 		lblTime.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTime.setForeground(new java.awt.Color(0,0,43));
+		lblTime.setForeground(new java.awt.Color(0, 0, 43));
 		lblTime.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblTime.setBounds(25, 350, 100, 25);
 		getContentPane().add(lblTime);
 		
 		lblInfoTime = new JLabel("999999");
 		lblInfoTime.setHorizontalAlignment(SwingConstants.CENTER);
-		lblInfoTime.setForeground(new java.awt.Color(0,0,43));
+		lblInfoTime.setForeground(new java.awt.Color(0, 0, 43));
 		lblInfoTime.setFont(new Font("SansSerif", Font.BOLD, 22));
 		lblInfoTime.setBounds(25, 400, 100, 50);
 		getContentPane().add(lblInfoTime);
 		
 		lblScore = new JLabel("SCORE");
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
-		lblScore.setForeground(new java.awt.Color(0,0,43));
+		lblScore.setForeground(new java.awt.Color(0, 0, 43));
 		lblScore.setFont(new Font("SansSerif", Font.BOLD, 20));
 		lblScore.setBounds(25, 475, 100, 25);
 		getContentPane().add(lblScore);

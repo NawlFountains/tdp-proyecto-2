@@ -2,9 +2,6 @@ package main;
 
 import game.Game;
 import gui.GUI;
-import gui.GameOverWindow;
-import threads.GameThread;
-import threads.TimerThread;
 
 /**
  * Clase principal del juego.

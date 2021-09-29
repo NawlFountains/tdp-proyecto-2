@@ -1,5 +1,6 @@
 package game;
 
+import exceptions.GameException;
 import exceptions.TetrominoException;
 import gui.GUI;
 import threads.GameThread;
@@ -8,10 +9,7 @@ import threads.TimerThread;
 /**
  * Modela el juego.
  */
-
 public class Game {
-	
-	//Atributos de instancia
 	
 	protected int points = 0;
 	protected int elapsedTime = 0;
@@ -19,6 +17,8 @@ public class Game {
 
 	protected Grid grid;
 	protected GUI gui;
+	
+	private boolean started = false;
 
 	/**
 	 * Crea una nueva instancia del juego.
@@ -32,6 +32,9 @@ public class Game {
 		gui.updatePoints();
 	}
 	
+	/**
+	 * Inicia este juego.
+	 */
 	public void start() {
 		grid.addTetromino();
 		
@@ -40,6 +43,8 @@ public class Game {
 		
 		Thread gameThread = new GameThread(this);
 		Thread timerThread = new TimerThread(this);
+
+		started = true;
 		
 		gameThread.start();
 		timerThread.start();
@@ -48,7 +53,10 @@ public class Game {
 	/**
 	 * Hace caer el tetromino que se encuantra actualmente en caida.
 	 */
-	public void run() {
+	public void run() throws GameException {
+		if (!started) {
+			throw new GameException("Se intento correr un juego no iniciado.");
+		}
 		try {
 			grid.getFallingTetr().fall();
 		} catch (TetrominoException e) {
@@ -89,8 +97,8 @@ public class Game {
 	}
 	
 	/*
-	 * Retorna los puntos acumulados
-	 * @return los puntos acumulados
+	 * Retorna los puntos acumulados.
+	 * @return Los puntos acumulados.
 	 * */
 	public int getPoints() {
 		return points;
@@ -105,8 +113,8 @@ public class Game {
 	}
 	
 	/**
-	 * 
-	 * @return la cantidad de milisegundos entre ejecución, calculada con el tiempo transcurrido actual.
+	 * Retorna la cantidad de milisegundos que el cliente de este juego debe esperar entre ejecuciones, calculada con el tiempo transcurrido actual.
+	 * @return la cantidad de milisegundos entre ejecuciones.
 	 */
 	public int getPauseBetweenRun() {
 		float minPause = 70;
@@ -114,11 +122,11 @@ public class Game {
 		float maxSpeedTime = 300;
 		
 		double toReturn = minPause;
-		if(!gui.fallKeyPressed() && elapsedTime <= maxSpeedTime) {
+		if (!gui.fallKeyPressed() && elapsedTime <= maxSpeedTime) {
 			float slope = - (maxPause - minPause) / maxSpeedTime;
 			toReturn = slope * elapsedTime + maxPause;
 		}
-		return (int) Math.round(toReturn);
+		return Math.toIntExact( Math.round(toReturn) );
 	}
 	
 	/**

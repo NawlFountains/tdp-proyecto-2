@@ -29,24 +29,6 @@ public class Block {
 	}
 	
 	/**
-	 * Setea la coordenada x de este bloque.
-	 * @param x La nueva cooredenada x para este bloque.
-	 */
-	@Deprecated
-	public void setX(int x) {
-		this.x = x;
-	}
-	
-	/**
-	 * Setea la coordenada y de este bloque.
-	 * @param y La nueva cooredenada y para este bloque.
-	 */
-	@Deprecated
-	public void setY(int y) {
-		this.y = y;
-	}
-	
-	/**
 	 * Retorna la coordenada x de este bloque.
 	 * @return La coordenada x de este bloque.
 	 */
